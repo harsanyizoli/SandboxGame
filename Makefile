@@ -1,2 +1,2 @@
 all: 
-		g++ -o main main.cpp src/glad.c -lglfw -lGL -ldl
+		g++ -o main main.cpp include/glad.c -lglfw -lGL -ldl
