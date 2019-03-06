@@ -57,7 +57,7 @@ int main(void)
     gladLoadGLLoader((GLADloadproc) glfwGetProcAddress);
     glfwSwapInterval(1);
    
-    Shader ourShader("vertex.shader", "fragment.shader");
+    Shader ourShader("shaders/block_vertex.shader", "shaders/block_fragment.shader");
     glEnable(GL_DEPTH_TEST);
 
     glfwSetKeyCallback(window, key_callback);

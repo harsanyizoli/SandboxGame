@@ -1,2 +1,9 @@
+CXX := -c++
+TARGET := SandboxGame
+LDFLAGS := -lglfw -lGL -ldl
+INCLUDE :=
+CXXFLAGS :=
+SRC	:=	main.cpp include/glad.c
+
 all: 
-		g++ -o main main.cpp include/glad.c -lglfw -lGL -ldl
+		$(CXX) $(SRC) $(LDFLAGS) -o $(TARGET)
