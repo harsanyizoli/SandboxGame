@@ -27,6 +27,8 @@ float currentFrame, lastFrame, deltaTime;
 float jumpDuration = 3.0f;
 bool isJumping;
 float blueValue;
+int squares = 10;
+
 static void error_callback(int error, const char* description)
 {
     fprintf(stderr, "Error: %s\n", description);
@@ -73,74 +75,55 @@ int main(void)
         -0.5f, -0.5f, -0.5f,  1.0f, 0.0f, 0.0f,
          0.5f, -0.5f, -0.5f,  1.0f, 0.0f, 0.0f,
          0.5f,  0.5f, -0.5f,  1.0f, 0.0f, 0.0f,
-         0.5f,  0.5f, -0.5f,  1.0f, 0.0f, 0.0f,
         -0.5f,  0.5f, -0.5f,  1.0f, 0.0f, 0.0f,
-        -0.5f, -0.5f, -0.5f,  1.0f, 0.0f, 0.0f,
 
-        -0.5f, -0.5f,  0.5f,  0.0f, 1.0f, 0.0f,
-         0.5f, -0.5f,  0.5f,  0.0f, 1.0f, 0.0f,
-         0.5f,  0.5f,  0.5f,  0.0f, 1.0f, 0.0f,
-         0.5f,  0.5f,  0.5f,  0.0f, 1.0f, 0.0f,
-        -0.5f,  0.5f,  0.5f,  0.0f, 1.0f, 0.0f,
-        -0.5f, -0.5f,  0.5f,  0.0f, 1.0f, 0.0f,
-
-        -0.5f,  0.5f,  0.5f,  0.0f, 0.0f, 0.0f,
-        -0.5f,  0.5f, -0.5f,  0.0f, 0.0f, 0.0f,
-        -0.5f, -0.5f, -0.5f,  0.0f, 0.0f, 0.0f,
-        -0.5f, -0.5f, -0.5f,  0.0f, 0.0f, 0.0f,
         -0.5f, -0.5f,  0.5f,  0.0f, 0.0f, 0.0f,
+         0.5f, -0.5f,  0.5f,  0.0f, 0.0f, 0.0f,
+         0.5f,  0.5f,  0.5f,  0.0f, 0.0f, 0.0f,
         -0.5f,  0.5f,  0.5f,  0.0f, 0.0f, 0.0f,
-
-         0.5f,  0.5f,  0.5f,  1.0f, 1.0f, 0.0f,
-         0.5f,  0.5f, -0.5f,  1.0f, 1.0f, 0.0f,
-         0.5f, -0.5f, -0.5f,  1.0f, 1.0f, 0.0f,
-         0.5f, -0.5f, -0.5f,  1.0f, 1.0f, 0.0f,
-         0.5f, -0.5f,  0.5f,  1.0f, 1.0f, 0.0f,
-         0.5f,  0.5f,  0.5f,  1.0f, 1.0f, 0.0f,
- 
-        -0.5f, -0.5f, -0.5f,  1.0f, 0.0f, 0.0f,
-         0.5f, -0.5f, -0.5f,  1.0f, 0.0f, 0.0f,
-         0.5f, -0.5f,  0.5f,  1.0f, 0.0f, 0.0f,
-         0.5f, -0.5f,  0.5f,  1.0f, 0.0f, 0.0f,
-        -0.5f, -0.5f,  0.5f,  1.0f, 0.0f, 0.0f,
-        -0.5f, -0.5f, -0.5f,  1.0f, 0.0f, 0.0f,
-
-        -0.5f,  0.5f, -0.5f,  1.0f, 0.0f, 0.0f,
-         0.5f,  0.5f, -0.5f,  1.0f, 0.0f, 0.0f,
-         0.5f,  0.5f,  0.5f,  1.0f, 0.0f, 0.0f,
-         0.5f,  0.5f,  0.5f,  1.0f, 0.0f, 0.0f,
-        -0.5f,  0.5f,  0.5f,  1.0f, 0.0f, 0.0f,
-        -0.5f,  0.5f, -0.5f,  1.0f, 0.0f, 0.0f
     };
-    glm::vec3 cubePositions[] = {
-        glm::vec3( 0.0f,  0.0f,  0.0f),
-        glm::vec3( 1.0f,  0.0f,  0.0f),
-        glm::vec3( 1.0f,  1.0f,  0.0f),
-        glm::vec3( 2.0f,  0.0f,  0.0f),
-        glm::vec3( 2.0f,  1.0f,  0.0f),
-        glm::vec3( 2.0f,  2.0f,  0.0f),
-        glm::vec3( 3.0f,  0.0f,  0.0f),
-        glm::vec3( 3.0f,  1.0f,  0.0f),
-        glm::vec3( 3.0f,  2.0f,  0.0f),
-        glm::vec3( 3.0f,  3.0f,  0.0f)     
+    unsigned int indices[] = {
+        0, 1, 2,
+        2, 3, 0,
+        4, 5, 6,
+        6, 7, 4,
+        5, 1, 2,
+        2, 6, 5,
+        4, 0, 3,
+        3, 7, 4,
+        7, 6, 2,
+        2, 3, 7,
+        4, 5, 1,
+        1, 0, 4
+
     };
         
-    unsigned int VBO1, VAO;
+    unsigned int VBO1, VAO, ebo;
+
     glGenVertexArrays(1, &VAO);
+
     glGenBuffers(1, &VBO1);
-    // bind the Vertex Array Object first, then bind and set vertex buffer(s), and then configure vertex attributes(s).
+    glGenBuffers(1, &ebo);
+
     glBindVertexArray(VAO);
+        
+    // bind the Vertex Array Object first, then bind and set vertex buffer(s), and then configure vertex attributes(s).
     glBindBuffer(GL_ARRAY_BUFFER, VBO1);
     glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
 
     // position attribute
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)0);
     glEnableVertexAttribArray(0);
-    // texture coord attribute
+    // texarrayture coord attribute
     glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(3 * sizeof(float)));
     glEnableVertexAttribArray(1);
 
-     float floor[] = {
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
+    /*
+    float floor[] = {
         -1.0f,  0.0f, -1.0f,  1.0f, 0.67f, 0.0f,
          1.0f,  0.0f, -1.0f,  1.0f, 0.67f, 0.0f,
          1.0f,  0.0f, 1.0f,  1.0f, 0.67f, 0.0f,
@@ -149,8 +132,6 @@ int main(void)
 
     unsigned int VBO2;
     glGenBuffers(1, &VBO2);
-    // bind the Vertex Array Object first, then bind and set vertex buffer(s), and then configure vertex attributes(s).
-    glBindVertexArray(VAO);
     glBindBuffer(GL_ARRAY_BUFFER, VBO2);
     glBufferData(GL_ARRAY_BUFFER, sizeof(floor), floor, GL_STATIC_DRAW);
 
@@ -159,7 +140,7 @@ int main(void)
     // texture coord attribute
     glVertexAttribPointer(3, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(3 * sizeof(float)));
     glEnableVertexAttribArray(3);
-
+*/
     ourShader.use();
 
     //glPolygonMode(GL_FRONT_AND_BACK, GL_LINE); 
@@ -172,11 +153,12 @@ int main(void)
 
         processInput(window);
 
-        glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
+        //glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); 
         
-        blueValue = (sin(glfwGetTime()) / 2.0f) + 0.5f;
+        blueValue = (sin(glfwGetTime() ) / 2.0f) + 0.5f;
         ourShader.setFloat("blueValue", blueValue);
+
         ourShader.use();
         // pass projection matrix to shader (note that in this case it could change every frame)
         glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom), (float)SCREEN_WIDTH / (float)SCREEN_HEIGHT, 0.1f, 100.0f);
@@ -188,18 +170,20 @@ int main(void)
 
         // render boxes
         glBindVertexArray(VAO);
-        for (unsigned int i = 0; i < 5; i++)
+        for (unsigned int i = 0; i < squares; i++)
         {
-            for (unsigned int j = 0; j < 5; j++){
-                if(i <= j){
+            for (unsigned int j = 0; j < squares; j++){
+                for (unsigned int k = 0; k < squares; k++){
                     glm::mat4 model = glm::mat4(1.0f);
                     
-                            model = glm::translate(model, glm::vec3((float)j, (float)i, 0.0f));
+                            model = glm::translate(model, glm::vec3((float)j, (float)i, (float)k));
                             //float angle = 20.0f * i;
                             //model = glm::rotate(model, glm::radians(angle), glm::vec3(1.0f, 0.3f, 0.5f));
+                            //model = glm::rotate(model, glm::radians((float)glfwGetTime() * 100.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+                            //model = glm::rotate(model, glm::radians((float)glfwGetTime() * 100.0f), glm::vec3(0.0f, 0.0f, 1.0f));
+                            //model = glm::translate(model, glm::vec3(sin((float)glfwGetTime() * 10.0f), cos((float)glfwGetTime() * 10.0f), 0.0f));
                             ourShader.setMat4("model", model);
-
-                            glDrawArrays(GL_TRIANGLES, 0, 100);
+                            glDrawElements(GL_TRIANGLE_FAN, 36, GL_UNSIGNED_INT, 0);
                 }
             }
         }
