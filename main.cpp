@@ -95,7 +95,6 @@ int main(void)
         2, 3, 7,
         4, 5, 1,
         1, 0, 4
-
     };
         
     unsigned int VBO1, VAO, ebo;
@@ -156,7 +155,7 @@ int main(void)
         //glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); 
         
-        blueValue = (sin(glfwGetTime() ) / 2.0f) + 0.5f;
+        blueValue = (sin( glfwGetTime() ) / 2.0f) + 0.5f;
         ourShader.setFloat("blueValue", blueValue);
 
         ourShader.use();
