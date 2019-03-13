@@ -1,5 +1,5 @@
 //#include <glad/glad.h>
-#include "include/glad.h"
+#include "glad.h"
 #include <GLFW/glfw3.h>
 #include <stdlib.h>
 #include <stdio.h>
@@ -8,17 +8,18 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
-#include "include/shader.h"
-#include "include/camera.h"
+#include "shader.h"
+#include "player.h"
+#include "util.h"
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 void processInput(GLFWwindow *window);
 void mouse_callback(GLFWwindow* window, double xpos, double ypos);
+void fpsCounter(double deltaTime);
+int SCREEN_WIDTH = 800;
+int SCREEN_HEIGHT = 600;
 
-int SCREEN_WIDTH = 1366;
-int SCREEN_HEIGHT = 768;
-
-Camera camera(glm::vec3(0.0f, 0.2f, 3.0f));
+Player player(glm::vec3(0.0f, 0.2f, 3.0f));
 float lastX = SCREEN_WIDTH / 2.0f;
 float lastY = SCREEN_HEIGHT / 2.0f;
 bool firstMouse = true;
@@ -26,8 +27,7 @@ bool firstMouse = true;
 float currentFrame, lastFrame, deltaTime;
 float jumpDuration = 3.0f;
 bool isJumping;
-float blueValue;
-int squares = 10;
+int squares = 25; // ^3
 
 static void error_callback(int error, const char* description)
 {
@@ -49,7 +49,7 @@ int main(void)
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-    window = glfwCreateWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "Sandbox Game", glfwGetPrimaryMonitor(), NULL);
+    window = glfwCreateWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "Sandbox Game", NULL, NULL);
     if (!window)
         {
             glfwTerminate();
@@ -59,7 +59,8 @@ int main(void)
     gladLoadGLLoader((GLADloadproc) glfwGetProcAddress);
     glfwSwapInterval(1);
    
-    Shader ourShader("shaders/block_vertex.shader", "shaders/block_fragment.shader");
+    Shader blockShader("shaders/block_vertex.shader", "shaders/block_fragment.shader");
+    Shader floorShader("shaders/floor_vertex.shader", "shaders/floor_fragment.shader");
     glEnable(GL_DEPTH_TEST);
 
     glfwSetKeyCallback(window, key_callback);
@@ -72,29 +73,29 @@ int main(void)
     glfwSwapInterval(1);
 
     float vertices[] = {
-        -0.5f, -0.5f, -0.5f,  1.0f, 0.0f, 0.0f,
-         0.5f, -0.5f, -0.5f,  1.0f, 0.0f, 0.0f,
-         0.5f,  0.5f, -0.5f,  1.0f, 0.0f, 0.0f,
-        -0.5f,  0.5f, -0.5f,  1.0f, 0.0f, 0.0f,
+        -1.0f, -1.0f, -1.0f, 0.0f, 0.0f, 
+         1.0f, -1.0f, -1.0f, 1.0f, 0.0f,
+         1.0f,  1.0f, -1.0f, 1.0f, 1.0f,
+        -1.0f,  1.0f, -1.0f, 0.0f, 1.0f,
 
-        -0.5f, -0.5f,  0.5f,  0.0f, 0.0f, 0.0f,
-         0.5f, -0.5f,  0.5f,  0.0f, 0.0f, 0.0f,
-         0.5f,  0.5f,  0.5f,  0.0f, 0.0f, 0.0f,
-        -0.5f,  0.5f,  0.5f,  0.0f, 0.0f, 0.0f,
+        -1.0f, -1.0f, 1.0f, 0.0f, 0.0f, 
+         1.0f, -1.0f, 1.0f, 1.0f, 0.0f,
+         1.0f,  1.0f, 1.0f, 1.0f, 1.0f,
+        -1.0f,  1.0f, 1.0f, 0.0f, 1.0f
     };
     unsigned int indices[] = {
         0, 1, 2,
         2, 3, 0,
-        4, 5, 6,
-        6, 7, 4,
-        5, 1, 2,
-        2, 6, 5,
+        6, 5, 4,
+        6, 4, 7,
+        1, 5, 2,
+        6, 2, 5,
         4, 0, 3,
         3, 7, 4,
-        7, 6, 2,
-        2, 3, 7,
-        4, 5, 1,
-        1, 0, 4
+        2, 6, 7,
+        2, 7, 3,
+        1, 5, 4,
+        1, 4, 0
     };
         
     unsigned int VBO1, VAO, ebo;
@@ -114,34 +115,59 @@ int main(void)
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
 
     // position attribute
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)0);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)0);
     glEnableVertexAttribArray(0);
     // texarrayture coord attribute
-    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(3 * sizeof(float)));
+    glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3 * sizeof(float)));
     glEnableVertexAttribArray(1);
 
-    glBindBuffer(GL_ARRAY_BUFFER, 0);
-    /*
-    float floor[] = {
-        -1.0f,  0.0f, -1.0f,  1.0f, 0.67f, 0.0f,
-         1.0f,  0.0f, -1.0f,  1.0f, 0.67f, 0.0f,
-         1.0f,  0.0f, 1.0f,  1.0f, 0.67f, 0.0f,
-        -1.0f,  0.0f, 1.0f,  1.0f, 0.67f, 0.0f
+    
+    unsigned int texture;
+    glGenTextures(1, &texture);
+    glBindTexture(GL_TEXTURE_2D, texture);
+    // set the texture wrapping parameters
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_MIRRORED_REPEAT);	// set texture wrapping to GL_REPEAT (default wrapping method)
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_MIRRORED_REPEAT);
+    // set texture filtering parameters
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    load_png_texture("textures/awesomeface.png");
+    
+    blockShader.use();
+    blockShader.setInt("ourTexture", 0);/*
+    float aFloor[] = {
+        -1.0f,  0.0f, -1.0f,  0.0f, 0.0f, 
+         1.0f,  0.0f, -1.0f,  0.0f, 1.0f, 
+         1.0f,  0.0f, 1.0f,   1.0f, 1.0f, 
+        -1.0f,  0.0f, 1.0f,   1.0f, 0.0f
     };
 
     unsigned int VBO2;
     glGenBuffers(1, &VBO2);
     glBindBuffer(GL_ARRAY_BUFFER, VBO2);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(floor), floor, GL_STATIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(aFloor), aFloor, GL_STATIC_DRAW);
 
-    glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)0);
+    glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)0);
     glEnableVertexAttribArray(2);
     // texture coord attribute
-    glVertexAttribPointer(3, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(3 * sizeof(float)));
+    glVertexAttribPointer(3, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3 * sizeof(float)));
     glEnableVertexAttribArray(3);
-*/
-    ourShader.use();
-
+    unsigned int texture2;
+    glGenTextures(1, &texture2);
+    glBindTexture(GL_TEXTURE_2D, texture2);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_MIRRORED_REPEAT);	// set texture wrapping to GL_REPEAT (default wrapping method)
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_MIRRORED_REPEAT);
+    // set texture filtering parameters
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
+    load_png_texture("textures/floor.png");
+    floorShader.use();
+    floorShader.setInt("ourtexture", 1);*/
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
+    glFrontFace(GL_CW);
+    //glEnable(GL_CULL_FACE);
+    glCullFace(GL_BACK);
     //glPolygonMode(GL_FRONT_AND_BACK, GL_LINE); 
     
     while (!glfwWindowShouldClose(window))
@@ -150,50 +176,49 @@ int main(void)
         deltaTime = currentFrame - lastFrame;
         lastFrame = currentFrame;
 
+        fpsCounter(deltaTime);
+
         processInput(window);
 
-        //glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); 
-        
-        blueValue = (sin( glfwGetTime() ) / 2.0f) + 0.5f;
-        ourShader.setFloat("blueValue", blueValue);
-
-        ourShader.use();
+        glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
+        glClear(GL_COLOR_BUFFER_BIT |  GL_DEPTH_BUFFER_BIT); 
+    
         // pass projection matrix to shader (note that in this case it could change every frame)
-        glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom), (float)SCREEN_WIDTH / (float)SCREEN_HEIGHT, 0.1f, 100.0f);
-        ourShader.setMat4("projection", projection);
+        glm::mat4 projection = glm::perspective(glm::radians(player.Zoom), (float)SCREEN_WIDTH / (float)SCREEN_HEIGHT, 0.1f, 300.0f);
+        blockShader.setMat4("projection", projection);
     
         // camera/view transformation
-        glm::mat4 view = camera.GetViewMatrix();
-        ourShader.setMat4("view", view);
-
+        glm::mat4 view = player.GetViewMatrix();
+        blockShader.setMat4("view", view);
+        glActiveTexture(GL_TEXTURE0);
+        glBindTexture(GL_TEXTURE_2D, texture);
+        blockShader.use();
         // render boxes
-        glBindVertexArray(VAO);
+        glBindVertexArray(VAO);/*
         for (unsigned int i = 0; i < squares; i++)
         {
             for (unsigned int j = 0; j < squares; j++){
                 for (unsigned int k = 0; k < squares; k++){
                     glm::mat4 model = glm::mat4(1.0f);
                     
-                            model = glm::translate(model, glm::vec3((float)j, (float)i, (float)k));
+                            model = glm::translate(model, glm::vec3((float)j*2, (float)i*2, (float)k*2));
                             //float angle = 20.0f * i;
                             //model = glm::rotate(model, glm::radians(angle), glm::vec3(1.0f, 0.3f, 0.5f));
                             //model = glm::rotate(model, glm::radians((float)glfwGetTime() * 100.0f), glm::vec3(1.0f, 0.0f, 0.0f));
                             //model = glm::rotate(model, glm::radians((float)glfwGetTime() * 100.0f), glm::vec3(0.0f, 0.0f, 1.0f));
                             //model = glm::translate(model, glm::vec3(sin((float)glfwGetTime() * 10.0f), cos((float)glfwGetTime() * 10.0f), 0.0f));
-                            ourShader.setMat4("model", model);
-                            glDrawElements(GL_TRIANGLE_FAN, 36, GL_UNSIGNED_INT, 0);
+                            blockShader.setMat4("model", model);
+                            glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
                 }
             }
         }
-        /*
+        */
         // calculate the model matrix for each object and pass it to shader before drawing
         glm::mat4 model = glm::mat4(1.0f); // make sure to initialize matrix to identity matrix first
-        model = glm::rotate(model, glm::radians((float)glfwGetTime() * 10.0f), glm::vec3(1.0f, 0.0f, 0.0f));
-        model = glm::rotate(model, glm::radians((float)glfwGetTime() * 10.0f), glm::vec3(0.0f, 0.0f, 1.0f));
-        ourShader.setMat4("model", model);
-
-        glDrawArrays(GL_TRIANGLES, 0, 38);*/
+        model = glm::translate(model, glm::vec3(0.0f, 0.0f, 0.0f));
+        blockShader.setMat4("model", model);
+        glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
+        //glDrawArrays(GL_TRIANGLES, 0, 100);
         glfwSwapBuffers(window);
         glfwPollEvents();
     }
@@ -212,13 +237,13 @@ void processInput(GLFWwindow *window)
         glfwSetWindowShouldClose(window, true);
 
     if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
-        camera.ProcessKeyboard(FORWARD, deltaTime);
+        player.ProcessKeyboard(FORWARD, deltaTime);
     if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
-        camera.ProcessKeyboard(BACKWARD, deltaTime);
+        player.ProcessKeyboard(BACKWARD, deltaTime);
     if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
-        camera.ProcessKeyboard(LEFT, deltaTime);
+        player.ProcessKeyboard(LEFT, deltaTime);
     if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
-        camera.ProcessKeyboard(RIGHT, deltaTime);
+        player.ProcessKeyboard(RIGHT, deltaTime);
     /*
     if (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS){
         if(isJumping){
@@ -252,5 +277,9 @@ void mouse_callback(GLFWwindow* window, double xpos, double ypos)
     lastX = xpos;
     lastY = ypos;
 
-    camera.ProcessMouseMovement(xoffset, yoffset);
+    player.ProcessMouseMovement(xoffset, yoffset);
+}
+void fpsCounter(double deltaTime){
+    double fps = 1 / deltaTime;
+    std::cout << "FPS " << fps << std::endl;
 }

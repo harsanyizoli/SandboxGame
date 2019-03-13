@@ -1,9 +1,9 @@
 CXX := -c++
 TARGET := SandboxGame
 LDFLAGS := -lglfw -lGL -ldl
-INCLUDE :=
+INCLUDE := -I/home/d/Documents/SandboxGL/include
 CXXFLAGS :=
-SRC	:=	main.cpp include/glad.c
+SRC	:=	src/main.cpp include/glad.c include/lodepng.cpp src/util.cpp
 
 all: 
-		$(CXX) $(SRC) $(LDFLAGS) -o $(TARGET)
+		$(CXX) $(SRC) $(LDFLAGS) -o $(TARGET) $(INCLUDE)
