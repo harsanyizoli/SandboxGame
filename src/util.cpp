@@ -18,7 +18,6 @@ void load_png_texture(const char *file_name) {
     std::cout << width << " " << height << std::endl;
     free(data); 
 }
-
 void flip_image_vertical(
     unsigned char *data, unsigned int width, unsigned int height)
 {

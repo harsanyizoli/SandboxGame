@@ -1,4 +1,3 @@
-//#include <glad/glad.h>
 #include "glad.h"
 #include <GLFW/glfw3.h>
 #include <stdlib.h>
@@ -11,13 +10,15 @@
 #include "shader.h"
 #include "player.h"
 #include "util.h"
+#include "block.hpp"
+
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 void processInput(GLFWwindow *window);
 void mouse_callback(GLFWwindow* window, double xpos, double ypos);
 void fpsCounter(double deltaTime);
 int SCREEN_WIDTH = 800;
-int SCREEN_HEIGHT = 600;
+int SCREEN_HEIGHT = 480;
 
 Player player(glm::vec3(0.0f, 0.2f, 3.0f));
 float lastX = SCREEN_WIDTH / 2.0f;
@@ -59,7 +60,7 @@ int main(void)
     gladLoadGLLoader((GLADloadproc) glfwGetProcAddress);
     glfwSwapInterval(1);
    
-    Shader blockShader("shaders/block_vertex.shader", "shaders/block_fragment.shader");
+    //Shader blockShader("shaders/block_vertex.shader", "shaders/block_fragment.shader");
     Shader floorShader("shaders/floor_vertex.shader", "shaders/floor_fragment.shader");
     glEnable(GL_DEPTH_TEST);
 
@@ -71,7 +72,11 @@ int main(void)
     glfwMakeContextCurrent(window);
     gladLoadGLLoader((GLADloadproc) glfwGetProcAddress);
     glfwSwapInterval(1);
+    unsigned int VAO;
+    glGenVertexArrays(1, &VAO);
+    glBindVertexArray(VAO);
 
+/*
     float vertices[] = {
         -1.0f, -1.0f, -1.0f, 0.0f, 0.0f, 
          1.0f, -1.0f, -1.0f, 1.0f, 0.0f,
@@ -120,8 +125,8 @@ int main(void)
     // texarrayture coord attribute
     glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3 * sizeof(float)));
     glEnableVertexAttribArray(1);
-
-    
+*/
+    /*
     unsigned int texture;
     glGenTextures(1, &texture);
     glBindTexture(GL_TEXTURE_2D, texture);
@@ -164,6 +169,14 @@ int main(void)
     load_png_texture("textures/floor.png");
     floorShader.use();
     floorShader.setInt("ourtexture", 1);*/
+    Block b1 = Block(glm::vec3(1.0f, 1.0f, 1.0f));
+    b1.genBlock(VAO);
+    Shader blockShader = b1.setShader("shaders/block_vertex.shader", "shaders/block_fragment.shader");
+/*
+    Block b2 = Block(glm::vec3(10.0f, 0.0f, 5.0f));
+    b2.genBlock(VAO);
+    Shader block2Shader = b2.setShader("shaders/block_vertex.shader", "shaders/block_fragment.shader");
+*/
     glBindBuffer(GL_ARRAY_BUFFER, 0);
     glFrontFace(GL_CW);
     //glEnable(GL_CULL_FACE);
@@ -185,16 +198,19 @@ int main(void)
     
         // pass projection matrix to shader (note that in this case it could change every frame)
         glm::mat4 projection = glm::perspective(glm::radians(player.Zoom), (float)SCREEN_WIDTH / (float)SCREEN_HEIGHT, 0.1f, 300.0f);
+        //glm::mat4 projection = glm::mat4(1.0f);
         blockShader.setMat4("projection", projection);
     
         // camera/view transformation
         glm::mat4 view = player.GetViewMatrix();
+        //glm::mat4 view = glm::mat4(1.0f);
         blockShader.setMat4("view", view);
-        glActiveTexture(GL_TEXTURE0);
-        glBindTexture(GL_TEXTURE_2D, texture);
+        //glActiveTexture(GL_TEXTURE0);
+        //glBindTexture(GL_TEXTURE_2D, texture);
         blockShader.use();
         // render boxes
-        glBindVertexArray(VAO);/*
+        glBindVertexArray(VAO);
+        /*
         for (unsigned int i = 0; i < squares; i++)
         {
             for (unsigned int j = 0; j < squares; j++){
@@ -215,7 +231,7 @@ int main(void)
         */
         // calculate the model matrix for each object and pass it to shader before drawing
         glm::mat4 model = glm::mat4(1.0f); // make sure to initialize matrix to identity matrix first
-        model = glm::translate(model, glm::vec3(0.0f, 0.0f, 0.0f));
+        //model = glm::translate(model, glm::vec3(0.0f, 0.0f, 0.0f));
         blockShader.setMat4("model", model);
         glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
         //glDrawArrays(GL_TRIANGLES, 0, 100);
@@ -244,23 +260,13 @@ void processInput(GLFWwindow *window)
         player.ProcessKeyboard(LEFT, deltaTime);
     if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
         player.ProcessKeyboard(RIGHT, deltaTime);
-    /*
-    if (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS){
-        if(isJumping){
-            return;
-        } else {
-            isJumping = true;
-        }
-        float start = glfwGetTime();
-        float duration = start = float(glfwGetTime());
-        std::cout << duration << std::endl;
-        if(duration < 0.5f){
-            camera.jump(true, deltaTime/ 10);
-        } else if( duration >= 0.5 && duration <= jumpDuration){
-            camera.jump(false, deltaTime / 10);
-        }; 
-        isJumping = false;
-    }  */
+    if (glfwGetKey(window, GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS && glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS){
+        player.setMovementSpeed(20.0f);
+    }
+    if (glfwGetKey(window, GLFW_KEY_LEFT_SHIFT) == GLFW_RELEASE){
+        player.setMovementSpeed(5.0f);
+    }
+        
 }
 void mouse_callback(GLFWwindow* window, double xpos, double ypos)
 {
