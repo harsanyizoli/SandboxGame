@@ -17,10 +17,10 @@ void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 void processInput(GLFWwindow *window);
 void mouse_callback(GLFWwindow* window, double xpos, double ypos);
 void fpsCounter(double deltaTime);
-int SCREEN_WIDTH = 800;
-int SCREEN_HEIGHT = 480;
+int SCREEN_WIDTH = 1280;
+int SCREEN_HEIGHT = 720;
 
-Player player(glm::vec3(0.0f, 0.2f, 3.0f));
+Player player(glm::vec3(0.0f, 0.0f, 3.0f));
 float lastX = SCREEN_WIDTH / 2.0f;
 float lastY = SCREEN_HEIGHT / 2.0f;
 bool firstMouse = true;
@@ -61,7 +61,7 @@ int main(void)
     glfwSwapInterval(1);
    
     //Shader blockShader("shaders/block_vertex.shader", "shaders/block_fragment.shader");
-    Shader floorShader("shaders/floor_vertex.shader", "shaders/floor_fragment.shader");
+    //Shader floorShader("shaders/floor_vertex.shader", "shaders/floor_fragment.shader");
     glEnable(GL_DEPTH_TEST);
 
     glfwSetKeyCallback(window, key_callback);
@@ -83,13 +83,13 @@ int main(void)
          1.0f,  1.0f, -1.0f, 1.0f, 1.0f,
         -1.0f,  1.0f, -1.0f, 0.0f, 1.0f,
 
-        -1.0f, -1.0f, 1.0f, 0.0f, 0.0f, 
-         1.0f, -1.0f, 1.0f, 1.0f, 0.0f,
-         1.0f,  1.0f, 1.0f, 1.0f, 1.0f,
-        -1.0f,  1.0f, 1.0f, 0.0f, 1.0f
+        -1.0f, -std::to_string
+         1.0f, -std::to_string
+         1.0f,  std::to_string
+        -1.0f,  std::to_string
     };
-    unsigned int indices[] = {
-        0, 1, 2,
+    unsigned intstd::to_string
+        0, 1, 2,std::to_string
         2, 3, 0,
         6, 5, 4,
         6, 4, 7,
@@ -169,9 +169,9 @@ int main(void)
     load_png_texture("textures/floor.png");
     floorShader.use();
     floorShader.setInt("ourtexture", 1);*/
-    Block b1 = Block(glm::vec3(1.0f, 1.0f, 1.0f));
+    Block b1 = Block(glm::vec3(1.0f, 1.0f, 1.0f), player);
     b1.genBlock(VAO);
-    Shader blockShader = b1.setShader("shaders/block_vertex.shader", "shaders/block_fragment.shader");
+    //b1.useShader(blockShader);
 /*
     Block b2 = Block(glm::vec3(10.0f, 0.0f, 5.0f));
     b2.genBlock(VAO);
@@ -189,13 +189,15 @@ int main(void)
         deltaTime = currentFrame - lastFrame;
         lastFrame = currentFrame;
 
-        fpsCounter(deltaTime);
+        //fpsCounter(deltaTime);
 
         processInput(window);
 
         glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT |  GL_DEPTH_BUFFER_BIT); 
-    
+        glBindVertexArray(VAO);
+        b1.render(VAO);
+    /*
         // pass projection matrix to shader (note that in this case it could change every frame)
         glm::mat4 projection = glm::perspective(glm::radians(player.Zoom), (float)SCREEN_WIDTH / (float)SCREEN_HEIGHT, 0.1f, 300.0f);
         //glm::mat4 projection = glm::mat4(1.0f);
@@ -209,8 +211,7 @@ int main(void)
         //glBindTexture(GL_TEXTURE_2D, texture);
         blockShader.use();
         // render boxes
-        glBindVertexArray(VAO);
-        /*
+        
         for (unsigned int i = 0; i < squares; i++)
         {
             for (unsigned int j = 0; j < squares; j++){
@@ -228,13 +229,13 @@ int main(void)
                 }
             }
         }
-        */
         // calculate the model matrix for each object and pass it to shader before drawing
         glm::mat4 model = glm::mat4(1.0f); // make sure to initialize matrix to identity matrix first
         //model = glm::translate(model, glm::vec3(0.0f, 0.0f, 0.0f));
         blockShader.setMat4("model", model);
         glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
         //glDrawArrays(GL_TRIANGLES, 0, 100);
+        */
         glfwSwapBuffers(window);
         glfwPollEvents();
     }
@@ -265,6 +266,9 @@ void processInput(GLFWwindow *window)
     }
     if (glfwGetKey(window, GLFW_KEY_LEFT_SHIFT) == GLFW_RELEASE){
         player.setMovementSpeed(5.0f);
+    }
+    if (glfwGetKey(window, GLFW_KEY_T) == GLFW_PRESS){
+        printf("%f, %f, %f\n", player.Front.x, player.Front.y, player.Front.z);
     }
         
 }

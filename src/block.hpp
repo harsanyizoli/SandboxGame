@@ -8,18 +8,16 @@
 #include "shader.h"
 
 class Block {
-
+    Shader shader = Shader("shaders/block_vertex.shader", "shaders/block_fragment.shader");
+    Player player;
     public:
-        Block(glm::vec3 worldPos){
+        Block(glm::vec3 worldPos, Player player){
             worldPosition = worldPos;
+            player = player;
         }
 
         void setPosition(glm::vec3 Pos){
             worldPosition = Pos;
-        };
-        Shader setShader(char* vertexshader, char* fragmentshader){
-            Shader blockShader(vertexshader, fragmentshader);
-            return blockShader;
         }
         void genBlock(unsigned int VAO){
 
@@ -41,13 +39,28 @@ class Block {
             // texarrayture coord attribute
             //glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)(3 * sizeof(float)));
             //glEnableVertexAttribArray(1);
-
+            shader.use();
             glBindBuffer(GL_ARRAY_BUFFER, 0);
+        }
+        void render(unsigned int VAO){
+            glm::mat4 projection = glm::perspective(glm::radians(player.Zoom), 16.0f / 9.0f, 0.1f, 300.0f);
+            shader.setMat4("projection", projection);
+
+            glm::mat4 view = player.GetViewMatrix();
+            shader.setMat4("view", view);
+
+            glm::mat4 model = glm::mat4(1.0f); // make sure to initialize matrix to identity matrix first
+            model = glm::translate(model, worldPosition);
+            shader.use();
+            shader.setMat4("model", model);
+            glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
+            glDrawArrays(GL_TRIANGLES, 0, 100);
         }
 
     private:
 
         glm::vec3 worldPosition;
+
         float vertices[24] = {
             -1.0f, -1.0f, -1.0f, 
             1.0f, -1.0f, -1.0f,
