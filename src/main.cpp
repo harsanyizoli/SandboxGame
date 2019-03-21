@@ -12,22 +12,26 @@
 #include "util.h"
 #include "block.hpp"
 
+#include <vector>
+
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 void processInput(GLFWwindow *window);
 void mouse_callback(GLFWwindow* window, double xpos, double ypos);
-void fpsCounter(double deltaTime);
-int SCREEN_WIDTH = 1280;
-int SCREEN_HEIGHT = 720;
+void updateFps(FPS *fps, double deltaTime);
+int SCREEN_WIDTH = 1024;
+int SCREEN_HEIGHT = 576;
+
+int data = 0;
 
 Player player(glm::vec3(0.0f, 0.0f, 3.0f));
 float lastX = SCREEN_WIDTH / 2.0f;
 float lastY = SCREEN_HEIGHT / 2.0f;
 bool firstMouse = true;
+bool isJumping = false;
 
 float currentFrame, lastFrame, deltaTime;
 float jumpDuration = 3.0f;
-bool isJumping;
 int squares = 25; // ^3
 
 static void error_callback(int error, const char* description)
@@ -59,9 +63,6 @@ int main(void)
     glfwMakeContextCurrent(window);
     gladLoadGLLoader((GLADloadproc) glfwGetProcAddress);
     glfwSwapInterval(1);
-   
-    //Shader blockShader("shaders/block_vertex.shader", "shaders/block_fragment.shader");
-    //Shader floorShader("shaders/floor_vertex.shader", "shaders/floor_fragment.shader");
     glEnable(GL_DEPTH_TEST);
 
     glfwSetKeyCallback(window, key_callback);
@@ -72,170 +73,39 @@ int main(void)
     glfwMakeContextCurrent(window);
     gladLoadGLLoader((GLADloadproc) glfwGetProcAddress);
     glfwSwapInterval(1);
-    unsigned int VAO;
-    glGenVertexArrays(1, &VAO);
-    glBindVertexArray(VAO);
+    unsigned int VAO1, VAO2;
+    glGenVertexArrays(1, &VAO1);
+    glGenVertexArrays(1, &VAO2);
 
-/*
-    float vertices[] = {
-        -1.0f, -1.0f, -1.0f, 0.0f, 0.0f, 
-         1.0f, -1.0f, -1.0f, 1.0f, 0.0f,
-         1.0f,  1.0f, -1.0f, 1.0f, 1.0f,
-        -1.0f,  1.0f, -1.0f, 0.0f, 1.0f,
-
-        -1.0f, -std::to_string
-         1.0f, -std::to_string
-         1.0f,  std::to_string
-        -1.0f,  std::to_string
-    };
-    unsigned intstd::to_string
-        0, 1, 2,std::to_string
-        2, 3, 0,
-        6, 5, 4,
-        6, 4, 7,
-        1, 5, 2,
-        6, 2, 5,
-        4, 0, 3,
-        3, 7, 4,
-        2, 6, 7,
-        2, 7, 3,
-        1, 5, 4,
-        1, 4, 0
-    };
-        
-    unsigned int VBO1, VAO, ebo;
-
-    glGenVertexArrays(1, &VAO);
-
-    glGenBuffers(1, &VBO1);
-    glGenBuffers(1, &ebo);
-
-    glBindVertexArray(VAO);
-        
-    // bind the Vertex Array Object first, then bind and set vertex buffer(s), and then configure vertex attributes(s).
-    glBindBuffer(GL_ARRAY_BUFFER, VBO1);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
-
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
-    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
-
-    // position attribute
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)0);
-    glEnableVertexAttribArray(0);
-    // texarrayture coord attribute
-    glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3 * sizeof(float)));
-    glEnableVertexAttribArray(1);
-*/
-    /*
-    unsigned int texture;
-    glGenTextures(1, &texture);
-    glBindTexture(GL_TEXTURE_2D, texture);
-    // set the texture wrapping parameters
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_MIRRORED_REPEAT);	// set texture wrapping to GL_REPEAT (default wrapping method)
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_MIRRORED_REPEAT);
-    // set texture filtering parameters
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-    load_png_texture("textures/awesomeface.png");
     
-    blockShader.use();
-    blockShader.setInt("ourTexture", 0);/*
-    float aFloor[] = {
-        -1.0f,  0.0f, -1.0f,  0.0f, 0.0f, 
-         1.0f,  0.0f, -1.0f,  0.0f, 1.0f, 
-         1.0f,  0.0f, 1.0f,   1.0f, 1.0f, 
-        -1.0f,  0.0f, 1.0f,   1.0f, 0.0f
-    };
+    Block b1 = Block(glm::vec3(2.0f, 2.0f, 2.0f));
+    b1.genBlock(VAO1);
+    Block b2 = Block(glm::vec3(0.0f, 0.0f, 0.0f));
+    b2.genBlock(VAO2);
 
-    unsigned int VBO2;
-    glGenBuffers(1, &VBO2);
-    glBindBuffer(GL_ARRAY_BUFFER, VBO2);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(aFloor), aFloor, GL_STATIC_DRAW);
-
-    glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)0);
-    glEnableVertexAttribArray(2);
-    // texture coord attribute
-    glVertexAttribPointer(3, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3 * sizeof(float)));
-    glEnableVertexAttribArray(3);
-    unsigned int texture2;
-    glGenTextures(1, &texture2);
-    glBindTexture(GL_TEXTURE_2D, texture2);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_MIRRORED_REPEAT);	// set texture wrapping to GL_REPEAT (default wrapping method)
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_MIRRORED_REPEAT);
-    // set texture filtering parameters
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-    glBindBuffer(GL_ARRAY_BUFFER, 0);
-    load_png_texture("textures/floor.png");
-    floorShader.use();
-    floorShader.setInt("ourtexture", 1);*/
-    Block b1 = Block(glm::vec3(1.0f, 1.0f, 1.0f), player);
-    b1.genBlock(VAO);
-    //b1.useShader(blockShader);
-/*
-    Block b2 = Block(glm::vec3(10.0f, 0.0f, 5.0f));
-    b2.genBlock(VAO);
-    Shader block2Shader = b2.setShader("shaders/block_vertex.shader", "shaders/block_fragment.shader");
-*/
-    glBindBuffer(GL_ARRAY_BUFFER, 0);
     glFrontFace(GL_CW);
-    //glEnable(GL_CULL_FACE);
+    glEnable(GL_CULL_FACE);
     glCullFace(GL_BACK);
     //glPolygonMode(GL_FRONT_AND_BACK, GL_LINE); 
-    
+
+    FPS fps = {0, 0};
+
     while (!glfwWindowShouldClose(window))
     {     
         float currentFrame = glfwGetTime();
         deltaTime = currentFrame - lastFrame;
         lastFrame = currentFrame;
 
-        //fpsCounter(deltaTime);
+        updateFps(&fps, deltaTime);
 
         processInput(window);
 
         glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT |  GL_DEPTH_BUFFER_BIT); 
-        glBindVertexArray(VAO);
-        b1.render(VAO);
-    /*
-        // pass projection matrix to shader (note that in this case it could change every frame)
-        glm::mat4 projection = glm::perspective(glm::radians(player.Zoom), (float)SCREEN_WIDTH / (float)SCREEN_HEIGHT, 0.1f, 300.0f);
-        //glm::mat4 projection = glm::mat4(1.0f);
-        blockShader.setMat4("projection", projection);
-    
-        // camera/view transformation
-        glm::mat4 view = player.GetViewMatrix();
-        //glm::mat4 view = glm::mat4(1.0f);
-        blockShader.setMat4("view", view);
-        //glActiveTexture(GL_TEXTURE0);
-        //glBindTexture(GL_TEXTURE_2D, texture);
-        blockShader.use();
-        // render boxes
         
-        for (unsigned int i = 0; i < squares; i++)
-        {
-            for (unsigned int j = 0; j < squares; j++){
-                for (unsigned int k = 0; k < squares; k++){
-                    glm::mat4 model = glm::mat4(1.0f);
-                    
-                            model = glm::translate(model, glm::vec3((float)j*2, (float)i*2, (float)k*2));
-                            //float angle = 20.0f * i;
-                            //model = glm::rotate(model, glm::radians(angle), glm::vec3(1.0f, 0.3f, 0.5f));
-                            //model = glm::rotate(model, glm::radians((float)glfwGetTime() * 100.0f), glm::vec3(1.0f, 0.0f, 0.0f));
-                            //model = glm::rotate(model, glm::radians((float)glfwGetTime() * 100.0f), glm::vec3(0.0f, 0.0f, 1.0f));
-                            //model = glm::translate(model, glm::vec3(sin((float)glfwGetTime() * 10.0f), cos((float)glfwGetTime() * 10.0f), 0.0f));
-                            blockShader.setMat4("model", model);
-                            glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
-                }
-            }
-        }
-        // calculate the model matrix for each object and pass it to shader before drawing
-        glm::mat4 model = glm::mat4(1.0f); // make sure to initialize matrix to identity matrix first
-        //model = glm::translate(model, glm::vec3(0.0f, 0.0f, 0.0f));
-        blockShader.setMat4("model", model);
-        glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
-        //glDrawArrays(GL_TRIANGLES, 0, 100);
-        */
+        b1.render(VAO1, player);
+        b2.render(VAO2, player);
+
         glfwSwapBuffers(window);
         glfwPollEvents();
     }
@@ -268,7 +138,13 @@ void processInput(GLFWwindow *window)
         player.setMovementSpeed(5.0f);
     }
     if (glfwGetKey(window, GLFW_KEY_T) == GLFW_PRESS){
-        printf("%f, %f, %f\n", player.Front.x, player.Front.y, player.Front.z);
+        printf("Front: %f, %f, %f ", player.Front.x, player.Front.y, player.Front.z);
+        printf("Pos: %f %f %f\n", player.Position.x, player.Position.y, player.Position.z);
+    }
+    if ((glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS) && !isJumping){
+        isJumping = true;
+        player.jump(deltaTime);
+        isJumping = false;
     }
         
 }
@@ -289,7 +165,14 @@ void mouse_callback(GLFWwindow* window, double xpos, double ypos)
 
     player.ProcessMouseMovement(xoffset, yoffset);
 }
-void fpsCounter(double deltaTime){
-    double fps = 1 / deltaTime;
-    std::cout << "FPS " << fps << std::endl;
+void updateFps(FPS *fps, double deltaTime){
+    fps->frames++;
+    double now = glfwGetTime();
+    double elapsed = now - fps->last;
+    //printf("%f %f \n", now, elapsed);
+    if (elapsed >= 1.0){
+        printf("%f \n", fps->frames/elapsed);
+        fps->last = now;
+        fps->frames = 0;
+    }
 }

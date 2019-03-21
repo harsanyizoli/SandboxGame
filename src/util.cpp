@@ -2,6 +2,7 @@
 #include "lodepng.h"
 #include "util.h"
 #include <iostream>
+#include <unistd.h>
 
 void load_png_texture(const char *file_name) {
     unsigned int error;
@@ -12,7 +13,7 @@ void load_png_texture(const char *file_name) {
         std::cout << error << " " << lodepng_error_text(error) << std::endl;
         exit(1);
     }
-    flip_image_vertical(data, width, height);
+    //flip_image_vertical(data, width, height);
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
     glGenerateMipmap(GL_TEXTURE_2D);
     std::cout << width << " " << height << std::endl;

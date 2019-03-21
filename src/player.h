@@ -21,7 +21,8 @@ const float PITCH       =  0.0f;
 const float SPEED       =  50.0f;
 const float SENSITIVITY =  0.1f;
 const float ZOOM        =  45.0f;
-
+const float GRAVITY = -10.0f;
+float velo = 5.0f;
 
 // An abstract Player class that processes input and calculates the corresponding Euler Angles, Vectors and Matrices for use in OpenGL
 class Player
@@ -117,7 +118,34 @@ public:
     void setMovementSpeed(float speed){
         MovementSpeed = speed;
     }
+    void fall(float deltaTime){
+        if(Position.y > 0.0f){
+            Position.y = Position.y - (deltaTime * velo);
+            velo = velo + GRAVITY * deltaTime;
+        } else if (Position.y < 0.0f){
+            Position.y = 0.0f;
+        }
+    }
+    void jump (float deltaTime){
+        duration += deltaTime;
+        //printf("y: %f, d: %f\n", Position.y, duration);
+        if(checkPosy()){
+            Position.y = Position.y + (velo * deltaTime);  
+        }
+        velo = velo + GRAVITY * deltaTime;  
+        if(Position.y < 0.0f){
+            velo = 5.0f;
+            Position.y = 0.0f;
+        }
+    }
+    bool checkPosy(){
+        if(Position.y >= 0.0f){
+            return true;
+        }
+        return false;
+    }
 private:
+    float duration = 0.0f;
     // Calculates the front vector from the Player's (updated) Euler Angles
     void updatePlayerVectors()
     {
