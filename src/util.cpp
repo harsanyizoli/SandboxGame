@@ -52,7 +52,8 @@ GLFWwindow* createContext(){
     //glfwSetKeyCallback(window, key_callback);
     //glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
     //glfwSetCursorPosCallback(window, mouse_callback);
-    //glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+    std::cout << "[] Context created" << std::endl;
+    glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 
     return window;
 }

@@ -39,6 +39,7 @@ void processInput(GLFWwindow *window)
     if (glfwGetKey(window, GLFW_KEY_T) == GLFW_PRESS){
         //printf("Front: %f, %f, %f", player.Front.x, player.Front.y, player.Front.z);
         //printf("Pos: %f %f %f\n", player.Position.x, player.Position.y, player.Position.z);
+        glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
     }
     if ((glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS) && !isJumping){
         isJumping = true;

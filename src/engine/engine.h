@@ -16,7 +16,7 @@ public:
     ~Engine();
 
     void input_handler(){
-        processInput(this->window);
+        processInput(window);
     }
 
     World initialize_world(){

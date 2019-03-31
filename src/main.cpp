@@ -11,7 +11,6 @@ int main(int argc, char const *argv[])
     Engine* e = new Engine(window);
     World w = e->initialize_world();
 
-
     while (!glfwWindowShouldClose(window))
     {     
         float currentFrame = glfwGetTime();

@@ -16,34 +16,11 @@
 
 int obj_id = 0;
 
-struct ground
-{
-    float  y = 0.0;
-    float getYforPos(glm::vec3 Pos){
-        return y;
-    }
-};
-struct object {
-
-    float x;
-    float y;
-    float z;
-    int id;
-    char* name;
-
-    object(char* name, int id){
-        this->name = name;
-        this-> id = id;
-
-    }
-
-};
-
 class World
 {
 private:
 public:
-    std::vector<object> objects;
+    //std::vector<object> objects;
     
     World(){
 
@@ -52,20 +29,6 @@ public:
     void printStat(){
     }
 
-    int make_obj(){
-        object* t = new object("obj 1", obj_id);
-        objects.push_back(*t);
-        obj_id++;
-        return t->id;
-    }
-
-    void get_obj(int id){
-        for(object o : objects){
-            if(o.id == id){
-                std::cout << o.name << std::endl;
-            }
-        }
-    }
 };
 
 #endif
