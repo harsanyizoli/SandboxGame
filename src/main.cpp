@@ -10,7 +10,8 @@ int main(int argc, char const *argv[])
     GLFWwindow* window = createContext();
     Engine* e = new Engine(window);
     World w = e->initialize_world();
-
+    w.makeObject("obj1", "../../../shaders/block.vert", "../../../shaders/block.vert");
+    
     while (!glfwWindowShouldClose(window))
     {     
         float currentFrame = glfwGetTime();
@@ -20,7 +21,8 @@ int main(int argc, char const *argv[])
         updateFps(&fps, deltaTime);
 
         e->input_handler();
-        w.printStat();
+        //w.printStat();
+        w.update();
         glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT |  GL_DEPTH_BUFFER_BIT); 
         

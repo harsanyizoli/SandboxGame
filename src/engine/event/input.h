@@ -1,7 +1,7 @@
 #ifndef INPUT_H
 #define INPUT_H
 #include <iostream>
-#include "../common.h"
+#include "../../common.h"
 
 int SCREEN_WIDTH = 1024;
 int SCREEN_HEIGHT = 576;

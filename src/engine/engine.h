@@ -1,7 +1,7 @@
-#include "input.h"
-#include "text.h"
+#include "event/input.h"
+#include "graphics/text.h"
 #include "log.h"
-#include "world.h"
+#include "world/world.h"
 
 class Engine
 {

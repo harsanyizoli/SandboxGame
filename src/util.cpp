@@ -1,4 +1,5 @@
 #include "util.h"
+#include "../include/lodepng.h"
 
 void load_png_texture(const char *file_name) {
     unsigned int error;

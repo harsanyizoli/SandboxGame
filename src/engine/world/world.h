@@ -7,6 +7,8 @@
 #include <iostream>
 #include <vector>
 
+#include "GameObject.h"
+
 #define WORLD_SIZE 128
 #define MAX_Y 128/2
 #define MIN_Y -(128/2)
@@ -14,19 +16,29 @@
 #define MIN_X -(128/2)
 #define ORIGIN {0, 0}
 
-int obj_id = 0;
-
 class World
 {
 private:
 public:
-    //std::vector<object> objects;
+    std::vector<GameObject*> objects;
     
     World(){
 
     };
+    void update(){
+        for(GameObject* g : objects){
+            g->render();
+        }
+    }
+    void makeObject(char* name, char* vert, char* frag){
+        GameObject* obj = new GameObject(name, vert, frag);
+        objects.emplace_back(obj);
+    }
 
     void printStat(){
+        for(GameObject* g : objects){
+            g->printInfo();
+        }
     }
 
 };
