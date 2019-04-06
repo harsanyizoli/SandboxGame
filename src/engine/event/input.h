@@ -2,7 +2,6 @@
 #define INPUT_H
 #include <iostream>
 #include "../../common.h"
-
 int SCREEN_WIDTH = 1024;
 int SCREEN_HEIGHT = 576;
 
@@ -48,8 +47,11 @@ void processInput(GLFWwindow *window)
     }
         
 }
-void mouse_callback(GLFWwindow* window, double xpos, double ypos)
+float mouse_callback(GLFWwindow* window)
 {
+    double xpos, ypos;
+    glfwGetCursorPos(window, &xpos, &ypos);
+
     if (firstMouse)
     {
         lastX = xpos;
@@ -62,7 +64,7 @@ void mouse_callback(GLFWwindow* window, double xpos, double ypos)
 
     lastX = xpos;
     lastY = ypos;
-
-    //World->queryCurrentPlayer().ProcessMouseMovement(xoffset, yoffset);
+    //std::cout << xpos << " " << ypos << std::endl;
+    return ypos;    
 }
 #endif

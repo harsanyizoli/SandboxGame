@@ -39,7 +39,9 @@ GLFWwindow* createContext(){
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-    window = glfwCreateWindow(1024, 576, "Sandbox Game", NULL, NULL);
+    glfwWindowHint(GLFW_SAMPLES, 4);
+
+    window = glfwCreateWindow(1600, 900, "Sandbox Game", NULL, NULL);
     if (!window)
         {
             glfwTerminate();
@@ -49,6 +51,7 @@ GLFWwindow* createContext(){
     gladLoadGLLoader((GLADloadproc) glfwGetProcAddress);
     glfwSwapInterval(1);
     glEnable(GL_DEPTH_TEST);
+    glEnable(GL_MULTISAMPLE);
 
     //glfwSetKeyCallback(window, key_callback);
     //glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);

@@ -8,6 +8,7 @@
 #include <vector>
 
 #include "GameObject.h"
+#include "Player.h"
 
 #define WORLD_SIZE 128
 #define MAX_Y 128/2
@@ -18,25 +19,27 @@
 
 class World
 {
-private:
 public:
-    std::vector<GameObject*> objects;
-    
-    World(){
+    std::vector<GameObject*> gameObjects;
+    Player player = Player();
+    World(){}
 
-    };
     void update(){
-        for(GameObject* g : objects){
+        for(GameObject* g : gameObjects){
             g->render();
+            std::cout << "g->render(player.getLookAt()) " << g->printInfo() << std::endl;
         }
+        std::cout << "wordupdate() " << gameObjects.size() << std::endl;
     }
-    void makeObject(char* name, char* vert, char* frag){
+
+    void makeObject(const char* name,const char* vert,const char* frag){
         GameObject* obj = new GameObject(name, vert, frag);
-        objects.emplace_back(obj);
+        gameObjects.emplace_back(obj);
+        std::cout << "object added" << obj->printInfo() << std::endl;
     }
 
     void printStat(){
-        for(GameObject* g : objects){
+        for(GameObject* g : gameObjects){
             g->printInfo();
         }
     }

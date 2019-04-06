@@ -2,26 +2,35 @@
 #include "graphics/text.h"
 #include "log.h"
 #include "world/world.h"
+#include "event/window.hpp"
 
 class Engine
 {
 private:
-    GLFWwindow* window;
+    Window* window;
     World* world;
+    
 public:
-    Engine(GLFWwindow* w){
-        window = w;
+    Engine(){
+        window = new Window("Sandbox Game", 1600, 900);
     };
     
     ~Engine();
 
+
     void input_handler(){
-        processInput(window);
+        processInput(window->getWindow());
     }
 
     World initialize_world(){
         world = new World();
         return *world;
+    }
+
+    void update(){
+        world->update();
+        window->update();
+        std::cout << "engine.update();" << std::endl;
     }
 
 };
