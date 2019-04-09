@@ -1,7 +1,7 @@
 #ifndef PLAYER_H
 #define PLAYER_H
 //#include "GameObject.h"
-#include "../../common.h"
+#include "../common.h"
 
 class Player
 {

@@ -3,7 +3,7 @@ TARGET := SandboxGame
 LDFLAGS := -lglfw -lGL -ldl
 INCLUDE := -I$(shell pwd)/include/
 CXXFLAGS :=
-SRC	:= include/glad.c include/lodepng.cpp src/engine/*.cpp src/engine/graphics/*.cpp src/*.cpp
+SRC	:= include/glad.c include/lodepng.cpp src/engine/*.cpp src/engine/*/*.cpp src/*.cpp
 
 all:
 	$(CXX) $(SRC) $(LDFLAGS) $(INCLUDE) -o $(TARGET)

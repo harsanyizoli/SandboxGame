@@ -1,6 +1,6 @@
 #ifndef UTIL_H
 #define UTIL_H
-#include "common.h"
+#include "../common.h"
 
 typedef struct {
     int frames;

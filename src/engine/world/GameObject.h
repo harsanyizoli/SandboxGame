@@ -1,4 +1,4 @@
-#include "../../common.h"
+#include "../common.h"
 #include "../graphics/shader.h"
 #include <vector>
 

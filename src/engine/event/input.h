@@ -1,17 +1,8 @@
 #ifndef INPUT_H
 #define INPUT_H
 #include <iostream>
-#include "../../common.h"
-int SCREEN_WIDTH = 1024;
-int SCREEN_HEIGHT = 576;
-
 int data = 0;
-
-float lastX = SCREEN_WIDTH / 2.0f;
-float lastY = SCREEN_HEIGHT / 2.0f;
-bool firstMouse = true;
-bool isJumping = false;
-bool fullScreen = false;
+/*
 void processInput(GLFWwindow *window)
     {
     if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
@@ -67,4 +58,5 @@ float mouse_callback(GLFWwindow* window)
     //std::cout << xpos << " " << ypos << std::endl;
     return ypos;    
 }
+*/
 #endif
