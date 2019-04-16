@@ -7,43 +7,32 @@
 #include <iostream>
 #include <vector>
 
-#include "GameObject.h"
+//#include "GameObject.h"
 #include "Player.h"
-
-#define WORLD_SIZE 128
-#define MAX_Y 128/2
-#define MIN_Y -(128/2)
-#define MAX_X 128/2
-#define MIN_X -(128/2)
-#define ORIGIN {0, 0}
+#include "GameObject.h"
+#include "../event/window.hpp"
 
 class World
 {
 public:
+    const char* name = "Test World";
+private:
+    Player* w_player = nullptr;
+    float p_lastx = 640;
+    float p_lasty = 320;
     std::vector<GameObject*> gameObjects;
-    Player player = Player();
-    World(){}
 
-    void update(){
-        for(GameObject* g : gameObjects){
-            g->render();
-            std::cout << "g->render(player.getLookAt()) " << g->printInfo() << std::endl;
-        }
-        std::cout << "wordupdate() " << gameObjects.size() << std::endl;
-    }
-
-    void makeObject(const char* name,const char* vert,const char* frag){
-        GameObject* obj = new GameObject(name, vert, frag);
-        gameObjects.emplace_back(obj);
-        std::cout << "object added" << obj->printInfo() << std::endl;
-    }
-
-    void printStat(){
-        for(GameObject* g : gameObjects){
-            g->printInfo();
-        }
-    }
-
+public:
+    World();
+    void loadWorldFromFile();
+    void update(float deltaTime);
+    void getPlayerPos();
+    void handlePlayerKeys(float dt);
+    void handlePlayerMouse(float dt);
+    
+private:
+    void render();
+    void init();
 };
 
 #endif

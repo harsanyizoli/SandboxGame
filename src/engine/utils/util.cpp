@@ -30,37 +30,6 @@ void flip_image_vertical(
     free(new_data);
 }
 
-GLFWwindow* createContext(){
-    GLFWwindow* window;
-    //glfwSetErrorCallback(error_callback);
-
-    if (!glfwInit())
-        exit(EXIT_FAILURE);
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
-    glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-    glfwWindowHint(GLFW_SAMPLES, 4);
-
-    window = glfwCreateWindow(1600, 900, "Sandbox Game", NULL, NULL);
-    if (!window)
-        {
-            glfwTerminate();
-            exit(EXIT_FAILURE);
-        }
-    glfwMakeContextCurrent(window);
-    gladLoadGLLoader((GLADloadproc) glfwGetProcAddress);
-    glfwSwapInterval(1);
-    glEnable(GL_DEPTH_TEST);
-    glEnable(GL_MULTISAMPLE);
-
-    //glfwSetKeyCallback(window, key_callback);
-    //glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
-    //glfwSetCursorPosCallback(window, mouse_callback);
-    std::cout << "[] Context created" << std::endl;
-    glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
-
-    return window;
-}
 
 void updateFps(FPS *fps, double deltaTime){
     fps->frames++;
