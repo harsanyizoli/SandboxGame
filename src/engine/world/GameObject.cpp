@@ -3,9 +3,13 @@
 GameObject::GameObject(const char* name)
     : g_name(name)
     {
-    //vertices.push_back({-1.0f, -1.0f, 0.0f});
-    //vertices.push_back({ 0.0f,  1.0f, 0.0f});
-    //vertices.push_back({ 1.0f, -1.0f, 0.0f});
+    vertices.push_back({-1.0f, -1.0f, 0.0f});
+    vertices.push_back({ -1.0f,  1.0f, 0.0f});
+    vertices.push_back({ 1.0f, 1.0f, 0.0f});
+
+    vertices.push_back({ -1.0f, -1.0f, 0.0f});
+    vertices.push_back({ 1.0f, 1.0f, 0.0f});
+    vertices.push_back({ 1.0f, -1.0f, 0.0f});
     setupMesh();
     g_shader = new Shader("/home/d/Documents/SandboxGL/shaders/block.vert", "/home/d/Documents/SandboxGL/shaders/block.frag");
 }
@@ -34,8 +38,8 @@ void GameObject::setupMesh(){
     std::cout << vao << std::endl;
     glBindVertexArray(vao);
     glBindBuffer(GL_ARRAY_BUFFER, vbo);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
-    std::cout << vertices << std::endl;
+    glBufferData(GL_ARRAY_BUFFER, sizeof(vertices)*vertices.size(), &vertices[0], GL_STATIC_DRAW);
+    //std::cout << vertices << std::endl;
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
     glEnableVertexAttribArray(0);
 }

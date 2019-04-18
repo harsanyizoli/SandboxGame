@@ -48,7 +48,7 @@ void World::handlePlayerMouse(float dt){
     //std::cout << p_lastx << " " << p_lasty << std::endl;
     float xoffset = Window::m_x - p_lastx;
     float yoffset = p_lasty - Window::m_y;
-    std::cout << xoffset << " " << yoffset << std::endl;
+    //std::cout << xoffset << " " << yoffset << std::endl;
 
     p_lastx = Window::m_x;
     p_lasty = Window::m_y;

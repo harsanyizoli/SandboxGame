@@ -2,6 +2,7 @@
 #define ENGINE_H
 #include "event/window.hpp"
 #include "world/world.h"
+#include "graphics/renderer.h"
 class Engine
 {
 public: 

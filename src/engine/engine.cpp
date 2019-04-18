@@ -32,7 +32,7 @@ void Engine::start(){
         float currentFrame = glfwGetTime();
         deltaTime = currentFrame - lastFrame;
         lastFrame = currentFrame;
-        //std::cout << deltaTime*1000 << std::endl; 
+        Renderer::draw_fps(deltaTime);
         update(deltaTime);
         chechForClose();
 

@@ -20,12 +20,12 @@ private:
     unsigned int id;
     const char* g_name; 
     GLuint vao;
-    //std::vector<vertex> vertices;
-    float vertices[9] = { 
+    std::vector<vertex> vertices;
+    /*float vertices[9] = { 
                         -1.0f, -1.0f, 0.0f,
                          0.0f,  1.0f, 0.0f,
                          1.0f, -1.0f, 0.0f
-                        };
+                        };*/
     
 public:
     GameObject(const char* name);
