@@ -30,7 +30,7 @@ void Engine::start(){
 
         e_window->clear();
         float currentFrame = glfwGetTime();
-        deltaTime = currentFrame - lastFrame;
+        deTltaTime = currentFrame - lastFrame;
         lastFrame = currentFrame;
         Renderer::draw_fps(deltaTime);
         update(deltaTime);

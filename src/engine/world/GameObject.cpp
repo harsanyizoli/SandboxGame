@@ -11,7 +11,7 @@ GameObject::GameObject(const char* name)
     vertices.push_back({ 1.0f, 1.0f, 0.0f});
     vertices.push_back({ 1.0f, -1.0f, 0.0f});
     setupMesh();
-    g_shader = new Shader("/home/d/Documents/SandboxGL/shaders/block.vert", "/home/d/Documents/SandboxGL/shaders/block.frag");
+    g_shader = new Shader("/home/d/code/SandboxGame/shaders/block.vert", "/home/d/code/SandboxGame/shaders/block.frag");
 }
 void GameObject::render(Player* p){
     g_shader->use();
