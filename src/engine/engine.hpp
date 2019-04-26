@@ -3,6 +3,7 @@
 #include "event/window.hpp"
 #include "world/world.h"
 #include "graphics/renderer.h"
+#include "utils/util.h"
 class Engine
 {
 public: 
@@ -12,6 +13,9 @@ private:
     Window* e_window;
     World* e_world;
 
+    
+    
+
 public:
 
     Engine();
@@ -20,7 +24,8 @@ public:
     void init();
     void update(float delta);
 
-    void start();
+    void run();
+
 private:
     void chechForClose();
 };

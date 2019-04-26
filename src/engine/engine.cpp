@@ -1,6 +1,7 @@
 #include "engine.hpp"
 
 
+
 Engine::Engine(){
     std::cout << "[] Engine created" << std::endl;
     init();
@@ -19,9 +20,12 @@ void Engine::init(){
     e_window = new Window("Sandbox Test", scr_width, scr_height, false);
     e_window->createContext();
     e_world = new World();
+
+    Renderer::gen_text_buffer("asd");
+    
 }
 
-void Engine::start(){
+void Engine::run(){
 
     float lastFrame, deltaTime;
     std::cout << "[] Engine started" << std::endl;
@@ -30,9 +34,10 @@ void Engine::start(){
 
         e_window->clear();
         float currentFrame = glfwGetTime();
-        deTltaTime = currentFrame - lastFrame;
+        deltaTime = currentFrame - lastFrame;
         lastFrame = currentFrame;
-        Renderer::draw_fps(deltaTime);
+        std::cout << 1/deltaTime << std::endl;
+        //Renderer::draw_fps(deltaTime);
         update(deltaTime);
         chechForClose();
 

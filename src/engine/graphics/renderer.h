@@ -2,13 +2,20 @@
 #define RENDERER_H
 #include <iostream>
 #include "../common.h"
-#include "shader.h"
+//#include "shader.h"
+//#include "buffer.hpp"
+#include "text_buffer.hpp"
+
 namespace Renderer
 {
-    void draw_text_2d(const char* text);
+    extern std::vector<TextBuffer*> text_buffer_ptrs;
+
+    void draw_text_2d(TextBuffer* b);
+    //void draw_3d(Buffer b);
     void draw_fps(float dt, float originx = 100.0f, float originy = 100.0f);
     
-    GLuint gen_text_buffer(float x, float y, float n, char *text);
+    void gen_text_buffer(char *text);
+
 
     struct Attrib
     {
@@ -24,10 +31,4 @@ namespace Renderer
     };
     
 } // Renderer
-
-void update();
-
-void bindbuffer();
-void draw3D(); //buffer
-
 #endif

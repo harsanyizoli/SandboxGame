@@ -8,5 +8,5 @@ FPS fps = {0, 0};
 int main(int argc, char const *argv[])
 {
     Engine game;
-    game.start();
+    game.run();
 }

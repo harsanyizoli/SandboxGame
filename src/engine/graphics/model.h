@@ -2,12 +2,9 @@
 
 #ifndef MODEL_H
 #define MODEL_H
+#include "../common.h"
+#include "lodepng.h"
 
-#include <glad/glad.h> 
-
-#include <glm/glm.hpp>
-#include <glm/gtc/matrix_transform.hpp>
-#include <lodepng.h>
 #include <assimp/Importer.hpp>
 #include <assimp/scene.h>
 #include <assimp/postprocess.h>
@@ -21,6 +18,7 @@
 #include <iostream>
 #include <map>
 #include <vector>
+
 using namespace std;
 
 unsigned int TextureFromFile(const char *path, const string &directory, bool gamma = false);
@@ -211,21 +209,22 @@ unsigned int TextureFromFile(const char *path, const string &directory, bool gam
     unsigned int textureID;
     glGenTextures(1, &textureID);
 
-    int width, height, nrComponents;
+    unsigned int width, height, nrComponents;
     //unsigned char *data = stbi_load(filename.c_str(), &width, &height, &nrComponents, 0);
-    std::vector<unsigned char> data;
-    int error = lodepng::decode(data, width, height, filename.c_str());
+    //std::vector<unsigned char> data;
+    unsigned char* data;
+    int error = lodepng_decode32_file(&data, &width, &height, filename.c_str());
     if(error){
         std::cout << "[] Texture load error" << lodepng_error_text(error) << std::endl;
     }
     glBindTexture(GL_TEXTURE_2D, textureID);
-    glTexImage2D(GL_TEXTURE_2D, 0, format, width, height, 0, GL_RGbA, GL_UNSIGNED_BYTE, &data[0]);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
     glGenerateMipmap(GL_TEXTURE_2D);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-    
+    free(data);
     return textureID;
 }
 #endif

@@ -7,10 +7,7 @@ typedef struct {
     double last = 0.0;
 } FPS;
 
-GLFWwindow* createContext();
-
-void load_png_texture(const char *file_name);
-void flip_image_vertical(unsigned char *data, unsigned int width, unsigned int height);
+void* allocate_memory(size_t size);
 
 void updateFps(FPS *fps, double deltaTime);
 
