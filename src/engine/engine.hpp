@@ -1,21 +1,27 @@
 #ifndef ENGINE_H
 #define ENGINE_H
 #include "event/window.hpp"
-#include "world/world.h"
-#include "graphics/renderer.h"
+#include "world/World.h"
+//#include "graphics/renderer.h"
 #include "utils/util.h"
+
+#include <filesystem>
+
 class Engine
 {
 public: 
-    const int scr_width = 1280;
-    const int scr_height = 720;
+
 private:
+    struct Config
+    {
+        const int scr_width = 1280;
+        const int scr_height = 720;
+        const char* title = "Sandbox Game Demo";
+        const bool fullscr = false;
+    } config;
+    
     Window* e_window;
     World* e_world;
-
-    
-    
-
 public:
 
     Engine();

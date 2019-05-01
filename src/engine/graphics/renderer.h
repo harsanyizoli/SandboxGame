@@ -1,9 +1,12 @@
 #ifndef RENDERER_H
 #define RENDERER_H
+
 #include <iostream>
 #include "../common.h"
-//#include "shader.h"
-//#include "buffer.hpp"
+#include "assert.h"
+#include "../world/Player.h"
+
+#include "buffer3d.hpp"
 #include "text_buffer.hpp"
 
 namespace Renderer
@@ -16,19 +19,7 @@ namespace Renderer
     
     void gen_text_buffer(char *text);
 
-
-    struct Attrib
-    {
-        GLuint program;
-        Shader* shader;
-        GLuint position;
-        GLuint normal;
-        GLuint uv;
-        GLuint sampler;
-        GLuint projection_matrix;
-        GLuint model_matrix;
-        GLuint view_matrix;
-    };
+    void render_3d(const Buffer3d& buffer, Player& p);
     
 } // Renderer
 #endif

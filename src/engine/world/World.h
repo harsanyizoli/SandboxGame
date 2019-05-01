@@ -7,10 +7,11 @@
 #include <iostream>
 #include <vector>
 
-//#include "GameObject.h"
 #include "Player.h"
 #include "GameObject.h"
 #include "../event/window.hpp"
+#include "Terrain.hpp"
+#include "../graphics/renderer.h"
 
 class World
 {
@@ -19,14 +20,18 @@ public:
 private:
     Player* w_player = nullptr;
     float p_lastx = 640;
-    float p_lasty = 320;
+    float p_lasty = 360;
     std::vector<GameObject*> gameObjects;
+    Terrain* w_terrain = nullptr;
 
 public:
     World();
+    
     void loadWorldFromFile();
+
     void update(float deltaTime);
     void getPlayerPos();
+
     void handlePlayerKeys(float dt);
     void handlePlayerMouse(float dt);
     

@@ -5,33 +5,29 @@
 
 #include "../graphics/shader.h"
 //#include "../graphics/model.h"
-#include "Player.h"
+#include "../graphics/buffer3d.hpp"
 #include <vector>
+
 typedef struct {
-    float x;
-    float y;
-    float z;
-} vertex;
+    float x = 0.0f;
+    float y = 0.0f;
+    float z = 0.0f;
+} Position;
+
 class GameObject
 {
+public:
+    Buffer3d* buffer;
 private:
-    Shader* g_shader = nullptr;
-    //Model* g_model;
     unsigned int id;
     const char* g_name; 
-    GLuint vao;
-    std::vector<vertex> vertices;
-    /*float vertices[9] = { 
-                        -1.0f, -1.0f, 0.0f,
-                         0.0f,  1.0f, 0.0f,
-                         1.0f, -1.0f, 0.0f
-                        };*/
     
+    std::vector<Position> data;
+
 public:
-    GameObject(const char* name);
+    GameObject(const char* name = "Unnamed");
     ~GameObject();
-    void render(Player* player);
-    void setupMesh();
+
 };
 
 #endif

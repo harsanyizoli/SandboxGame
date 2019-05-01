@@ -1,18 +1,22 @@
-#include "world.h"
+#include "World.h"
 
 World::World(){
-    std::cout << "[] World created" << std::endl;
+    std::cout << "[] World created " << this << std::endl;
     w_player = new Player();
     std::cout << "[] Player created " << w_player << std::endl;
+    w_terrain = new Terrain();
     init();
 }
 
 void World::render(){
     //std::cout << "render" << std::endl;
     for(GameObject* g : gameObjects){
-        g->render(w_player);
+        Renderer::render_3d(*(g->buffer), *w_player);
+        //g->render(w_player);
         //std::cout << w_player->Zoom << std::endl;
     }
+    //std::cout << "world render()" << std::endl;
+    Renderer::render_3d(*(w_terrain->buffer), *w_player);
 }
 
 void World::update(float deltaTime){

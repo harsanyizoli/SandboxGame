@@ -47,3 +47,17 @@ void Renderer::draw_fps( float dt, float originx, float originy ){
 void Renderer::gen_text_buffer(char *text){
     text_buffer_ptrs.emplace_back(new TextBuffer(16));
 }
+
+void Renderer::render_3d(const Buffer3d& buffer, Player& p){
+
+    glBindVertexArray(buffer.vao);
+ 
+    buffer.shader->use();
+    buffer.shader->setMat4("projection", glm::perspective(glm::radians(p.Zoom), (float)16/9, 0.1f, 100.0f));
+    buffer.shader->setMat4("view", p.GetViewMatrix());
+    buffer.shader->setMat4("model", glm::mat4(1.0f));
+
+    glDrawArrays(GL_TRIANGLES, 0, buffer.count);
+    std::cout << "rendering " << buffer.vao << std::endl;
+
+}
