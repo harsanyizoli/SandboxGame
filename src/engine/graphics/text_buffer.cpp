@@ -13,7 +13,7 @@ TextBuffer::TextBuffer(size_t s)
     makeChar("asd");
     genBuffers();
     std::cout << "texture loading" << std::endl;
-    loadTexture("/home/d/Documents/SandboxGL/textures/font.png");
+    loadTexture((char*)"/home/d/Documents/SandboxGL/textures/font.png");
 }
 
 TextBuffer::~TextBuffer()

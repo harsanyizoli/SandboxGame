@@ -74,7 +74,7 @@ void Window::update(){
     shouldClose();
 }
 void Window::clear(){
-    glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
+    glClearColor(0.3f, 0.3f, 0.3f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 }
 void Window::close(bool shouldClose = false){
@@ -108,4 +108,7 @@ void cursor_position_callback(GLFWwindow* window, double xpos, double ypos)
 }
 void mouse_button_callback(GLFWwindow* window, int button, int action, int mods){
     Window::m_buttons[button] = action != GLFW_RELEASE;
+}
+double Window::getCurrentTimer(){
+    return glfwGetTime();
 }

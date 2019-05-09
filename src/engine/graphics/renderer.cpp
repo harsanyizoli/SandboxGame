@@ -4,8 +4,6 @@
 void get_char_witdh(char input);
 void make_char(float* data, float x, float y, char c);
 
-std::vector<TextBuffer*> Renderer::text_buffer_ptrs;
-
 /*
 int get_char_width(char input) {
     static const int lookup[128] = {
@@ -21,43 +19,3 @@ int get_char_width(char input) {
     return lookup[input];
 }
 */
-
-void Renderer::draw_text_2d(TextBuffer* b){
-    
-    b->bind();
-    b->ta.shader->use();
-    glm::mat4 projection = glm::ortho(0.0f, 1280.0f, 720.0f, 0.0f, -1.0f, 1.0f); 
-    b->ta.shader->setMat4("projection", projection);
-    glm::mat4 model = glm::mat4(1.0f);
-    b->ta.shader->setMat4("model", model);
-    glActiveTexture(GL_TEXTURE1);
-    glBindTexture(GL_TEXTURE_2D, b->texture);
-    glDrawArrays(GL_TRIANGLES, 0, 6);
-    b->unbind();
-}
-void Renderer::draw_fps( float dt, float originx, float originy ){
-    TextBuffer* tb = new TextBuffer(16);
-    Renderer::draw_text_2d(tb);
-    //std::cout << "[] Rendering fps" << std::endl;
-    //gen buffer
-    //set bufer data fpsstr
-    //render triangles
-    //draw char texture onto triangles
-}
-void Renderer::gen_text_buffer(char *text){
-    text_buffer_ptrs.emplace_back(new TextBuffer(16));
-}
-
-void Renderer::render_3d(const Buffer3d& buffer, Player& p){
-
-    glBindVertexArray(buffer.vao);
- 
-    buffer.shader->use();
-    buffer.shader->setMat4("projection", glm::perspective(glm::radians(p.Zoom), (float)16/9, 0.1f, 100.0f));
-    buffer.shader->setMat4("view", p.GetViewMatrix());
-    buffer.shader->setMat4("model", glm::mat4(1.0f));
-
-    glDrawArrays(GL_TRIANGLES, 0, buffer.count);
-    std::cout << "rendering " << buffer.vao << std::endl;
-
-}

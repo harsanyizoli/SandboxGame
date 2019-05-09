@@ -19,8 +19,6 @@ public:
     const char* name = "Test World";
 private:
     Player* w_player = nullptr;
-    float p_lastx = 640;
-    float p_lasty = 360;
     std::vector<GameObject*> gameObjects;
     Terrain* w_terrain = nullptr;
 
@@ -38,6 +36,8 @@ public:
 private:
     void render();
     void init();
+
+    void initTerrain();
 };
 
 #endif

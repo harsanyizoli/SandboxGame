@@ -16,7 +16,7 @@ typedef struct {
     std::string current_dir;
     std::string textures = current_dir + "/textures/";
     std::string shaders = current_dir + "/shaders/";
-    std::string models = current_dir + "/models/";
+    std::string models = current_dir + "/model/";
 } Paths;
 
 std::string get_texture_path();

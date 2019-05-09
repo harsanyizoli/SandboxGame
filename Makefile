@@ -1,6 +1,6 @@
 CXX := -c++
 TARGET := SandboxGame
-LDFLAGS := -lglfw -lGL -ldl -lstdc++fs
+LDFLAGS := -lglfw -lGL -ldl -lstdc++fs -lassimp
 INCLUDE := -I$(shell pwd)/include/
 CXXFLAGS := -std=c++17
 SRC	:= include/glad.c include/lodepng.cpp src/engine/*.cpp src/engine/*/*.cpp src/*.cpp

@@ -1,24 +1,18 @@
+#ifndef TERRAIN_H
+#define TERRAIN_H
+
 #include <iostream>
 #include <vector>
 
-#include "../graphics/buffer3d.hpp"
+#include "../graphics/TerrainRenderable.hpp"
 
-typedef struct {
-    float x, y, z;
-} vertex_3d;
-
-class Terrain
+class Terrain : public TerrainRenderable
 {
 public:
 
-    Buffer3d* buffer;
-
 private:
 
-    int size = 1024;
-    float* data;
-    std::vector<vertex_3d> vertices;
-    int* indices;
+    const int size = 1024;
 
 public:
     Terrain();
@@ -26,3 +20,5 @@ public:
 private:
     void generateTerrain();
 };
+
+#endif

@@ -32,6 +32,8 @@ public:
 
     void run();
 
+    static double getTimer();
+
 private:
     void chechForClose();
 };

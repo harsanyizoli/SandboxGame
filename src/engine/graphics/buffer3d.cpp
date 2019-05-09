@@ -1,5 +1,5 @@
 #include "buffer3d.hpp"
-
+/*
 Buffer3d::Buffer3d(float* data, int count){
 
     shader = new Shader((get_shader_path() + "block.vert").c_str(), (get_shader_path() + "block.frag").c_str());
@@ -24,4 +24,4 @@ void Buffer3d::bind(){
 }
 void Buffer3d::unbind(){
     glBindVertexArray(0);
-}
+}*/

@@ -29,7 +29,7 @@ void Engine::run(){
     while(!glfwWindowShouldClose( e_window->getWindow() )){
 
         e_window->clear();
-        float currentFrame = glfwGetTime();
+        float currentFrame = getTimer();
         deltaTime = currentFrame - lastFrame;
         lastFrame = currentFrame;
         //std::cout << 1/deltaTime << std::endl;
@@ -43,4 +43,8 @@ void Engine::run(){
 void Engine::chechForClose(){
     if(Window::isKeyPressed(GLFW_KEY_ESCAPE))
         e_window->close(true);
+}
+
+double Engine::getTimer(){
+    return Window::getCurrentTimer();
 }

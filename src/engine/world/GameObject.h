@@ -3,9 +3,7 @@
 
 #include "../common.h"
 
-#include "../graphics/shader.h"
-//#include "../graphics/model.h"
-#include "../graphics/buffer3d.hpp"
+#include "../graphics/renderable.hpp"
 #include <vector>
 
 typedef struct {
@@ -14,20 +12,24 @@ typedef struct {
     float z = 0.0f;
 } Position;
 
-class GameObject
+class GameObject : public Renderable
 {
 public:
-    Buffer3d* buffer;
+    
 private:
     unsigned int id;
     const char* g_name; 
     
-    std::vector<Position> data;
+    std::string shaderName = "block";
+    Position p;
+
+    float rotateDegree = 0.0f;
+    float scale = 0.50f;
 
 public:
-    GameObject(const char* name = "Unnamed");
+    GameObject(std::string model, std::string shader, const char* name = "Unnamed");
     ~GameObject();
-
+    void move(Position toPos);
 };
 
 #endif

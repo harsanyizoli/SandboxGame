@@ -1,14 +1,14 @@
 #include "GameObject.h"
 
-GameObject::GameObject(const char* name)
+GameObject::GameObject(std::string model, std::string shader, const char* name)
     : g_name(name)
     {
-    data.push_back({-1.0f, -1.0f, 0.0f});
-    data.push_back({ -1.0f,  1.0f, 0.0f});
-    data.push_back({ 1.0f, 1.0f, 0.0f});
+    std::cout << "gameobject constructor " << std::endl;
+    loadModel(model);
+    loadShader(shader);
+    move({0.0f, -10.0f, 0.0f});
+}
 
-    data.push_back({ -1.0f, -1.0f, 0.0f});
-    data.push_back({ 1.0f, 1.0f, 0.0f});
-    data.push_back({ 1.0f, -1.0f, 0.0f});
-    buffer = new Buffer3d((float*)&data[0], (int)data.size());
+void GameObject::move(Position toPos){
+    setModel({toPos.x, toPos.y, toPos.z}, scale, rotateDegree);
 }

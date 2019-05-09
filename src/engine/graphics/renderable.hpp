@@ -2,34 +2,60 @@
 #define RENDERABLE_H
 
 #include "../common.h"
+#include "../utils/util.h"
+#include "types.h"
+#include "shader.h"
+#include "Mesh.h"
+#include "Model.h"
+
 #include <vector>
 
-#define ASPECT_RATIO (float)16.0/9.0
-
-struct Transformations {
-    glm::mat4 perspective;// = glm::perspective(glm::radians(camera.zoom), ASPECT_RATIO, 0.1f, 100.0f);
-    glm::mat4 view;// = camera.GetViewMatrix();
-    glm::mat4 model = glm::mat4(1.0f);
-} transform;
 class Renderable
 {
+
 private:
-    std::vector<float> vertices;
-    std::vector<float> normal;
-    std::vector<float> uv;
 
-    std::vector<int> indices;
+    Model* model;
+    Shader* shader;
 
-    GLuint vao;
-    GLuint vbo;
+    Transform3D trans;
 
 public:
-    Renderable(/* args */){
-        glGenVertexArrays(1, &vao);
+    Renderable(){
+        INFO("Renderable constructor");
+        trans.projection = glm::perspective(glm::radians(45.0f), ASPECT_RATIO, 0.1f, 100.0f);
     }
+
     ~Renderable(){
-        glDeleteVertexArrays(1, &vao);
+
+    }
+
+    void Draw(glm::mat4 view){
+        shader->use();
+
+        shader->setMat4("projection", trans.projection);
+        shader->setMat4("view", view);
+        shader->setMat4("model", trans.model);
+
+        model->Draw(*(this->shader));
+    }
+
+protected:
+
+    void setModel(glm::vec3 pos, float scale, float rotate){
+        glm::mat4 model = glm::mat4(1.0f);
+        model = glm::translate(model, pos);
+        model = glm::scale(model, glm::vec3(scale));
+        model = glm::rotate(model, glm::radians(rotate), glm::vec3(0.0f, 1.0f, 0.0f));
+        trans.model = model;
+    }   
+    void loadModel(std::string name){
+        model = new Model((char*)(get_model_path() + name + ".obj").c_str()); 
+    }
+    void loadShader(std::string name){
+        shader = new Shader((get_shader_path() + name +".vert").c_str(), (get_shader_path() + name + ".frag").c_str());
     }
 };
+
 
 #endif
