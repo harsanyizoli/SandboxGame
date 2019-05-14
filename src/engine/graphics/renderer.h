@@ -7,6 +7,7 @@
 #include "../world/Player.h"
 #include "../world/GameObject.h"
 #include "../world/Terrain.hpp"
+#include <thread>
 
 namespace Renderer
 {

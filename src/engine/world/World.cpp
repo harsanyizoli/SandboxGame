@@ -34,7 +34,7 @@ void World::init(){
     g = new GameObject("dj", "model");
     g->move({3.0f, 0.0f, 0.0f});
     gameObjects.push_back(g);
-    GameObject* g = new GameObject("tree", "model");
+    g = new GameObject("tree", "model");
     g->move({0.0f, 0.0f, 4.0f});
     gameObjects.push_back(g);
 }

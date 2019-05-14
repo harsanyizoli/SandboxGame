@@ -48,13 +48,16 @@ protected:
         model = glm::scale(model, glm::vec3(scale));
         model = glm::rotate(model, glm::radians(rotate), glm::vec3(0.0f, 1.0f, 0.0f));
         trans.model = model;
-    }   
+    }
+
     void loadModel(std::string name){
         model = new Model((char*)(get_model_path() + name + ".obj").c_str()); 
     }
+
     void loadShader(std::string name){
         shader = new Shader((get_shader_path() + name +".vert").c_str(), (get_shader_path() + name + ".frag").c_str());
     }
+    
 };
 
 
