@@ -12,6 +12,7 @@ World::World(){
 
 void World::render(){
     //std::cout << "render" << std::endl;
+    Renderer::render_3d_forward<Terrain>(*w_terrain, *w_player);
     for(GameObject* g : gameObjects){
         Renderer::render_3d_forward<GameObject>(*g, *w_player);
     }
@@ -32,10 +33,10 @@ void World::init(){
     GameObject* g = new GameObject("nanosuit", "model", "obj 1");
     gameObjects.push_back(g);
     g = new GameObject("dj", "model");
-    g->move({3.0f, 0.0f, 0.0f});
+    g->move({3.0f, 0.0f, 0.0f, 0.0f, 1.0f});
     gameObjects.push_back(g);
     g = new GameObject("tree", "model");
-    g->move({0.0f, 0.0f, 4.0f});
+    g->move({0.0f, 0.0f, 4.0f, 0.0f, 1.0f});
     gameObjects.push_back(g);
 }
 void World::initTerrain(){

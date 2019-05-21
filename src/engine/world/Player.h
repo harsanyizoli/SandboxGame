@@ -4,6 +4,7 @@
 #include "../common.h"
 #include "../graphics/Camera.h"
 #include "../event/window.hpp"
+#include "Terrain.hpp"
 
 #include <vector>
 
@@ -28,7 +29,7 @@ private:
     void handleKeyInput(float dt){
         if(Window::isKeyPressed(GLFW_KEY_W)){
             if(Window::isKeyPressed(GLFW_KEY_LEFT_SHIFT) ){
-                MovementSpeed = 20.0f;
+                MovementSpeed = 80.0f;
             } else {
                 MovementSpeed = BASE_SPEED;
             }

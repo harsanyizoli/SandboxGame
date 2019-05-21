@@ -1,59 +1,39 @@
 #include "Terrain.hpp"
+
+float** Terrain::heightMap = (float**) malloc(size*sizeof(float*));
+
+float get_fract(float f);
+
 Terrain::Terrain(){
-    //loadMesh();
-    generateTerrain();
+    generateTerrain(Terrain::size);
+    genMesh(size - 1, heightMap);
 }
 
 Terrain::~Terrain(){
 
 }
 
-void Terrain::generateTerrain(){
+void Terrain::generateTerrain(const unsigned int size){
+    unsigned char* buffer = (unsigned char*) malloc(size*size);
 
-}
-/*
-#include <fstream>
-#include <iostream>
-#include <cmath>
+    for(int i = 0; i < size; i++){ heightMap[i] = (float*) malloc(size*sizeof(float)); }
 
-void get_height_for_pos(float x, float y );
-float get_fract(float f);
-const unsigned int width = 1024;
-const unsigned int size = width* width;
-
-float height_map[width][width];
-
-int main(int argc, char const *argv[]){
-
-    unsigned char* buffer = new unsigned char[size];
-
-
-    float posx = 0.25;
-    float posy = 1.0f;
-
-    std::ifstream file;
-    file.open("testmap1.data", std::ios::in | std::ios::binary);
-    file.read((char*)buffer, size);
+    std::ifstream file ("testmap3.data", std::ios::in | std::ios::binary);
+    if(!file)
+        ERROR("no file");
+    
+    if (!file.read((char*)buffer, (size * size)))
+        ERROR("failed to read");
     file.close();
 
-    for(int i = 0; i < width; i++){
-        for(int j = 0 ; j < width; j++){
-            height_map[i][j] = (float)*buffer;
-            //std::cout << height_map[i][j] << " ";
+    for(int i = 0; i < size; i++){
+        for(int j = 0 ; j < size; j++){
+            heightMap[i][j] = ((float)*buffer + yoffset) * scale ;
             buffer++;
         }
-        //std::cout << "\n";
-    }//
-    for(int i = 0; i < 4; i++){
-        get_height_for_pos(posx, posy);
-        posx += 0.25f;
-        posy += 0.25f;
-    }//
-    get_height_for_pos(posx, posy);
-    return 0;
+    }
 }
-
-void get_height_for_pos(float x, float y ){
+float Terrain::getHeightForPos(float x, float y){
     // return whole values
     int xmin, xmax, ymin, ymax;
     if(x == floorf(x)){
@@ -73,19 +53,19 @@ void get_height_for_pos(float x, float y ){
         ymax = (int)ceilf(y);
     }
 
-    float resymin = ((1.0f - get_fract(y)) * height_map[xmin][ymin]) + ( get_fract(y) * height_map[xmin][ymax]);
-    float resymax = ((1.0f - get_fract(y)) * height_map[xmax][ymin]) + (get_fract(y) * height_map[xmax][ymax]);
+    float resymin = ((1.0f - get_fract(y)) * heightMap[xmin][ymin]) + ( get_fract(y) * heightMap[xmin][ymax]);
+    float resymax = ((1.0f - get_fract(y)) * heightMap[xmax][ymin]) + (get_fract(y) * heightMap[xmax][ymax]);
     
     float result_height = ((get_fract(x) * resymin) + ((1.0f - get_fract(x)) * resymax));
-    std::cout << "xpos : " << x << " ypos: " << y << "\n";
-    std::cout << xmin << " " << ymin << " " << xmax << " " << ymin << "\n" << xmax << " " << ymin << " " << xmax << " " << ymax << "\n"; 
-    std::cout << height_map[xmin][ymin] << " " << height_map[xmax][ymin] << "\n" << height_map[xmax][ymin] << " " << height_map[xmax][ymax] << "\n";
+    //std::cout << "xpos : " << x << " ypos: " << y << "\n";
+    //std::cout << xmin << " " << ymin << " " << xmax << " " << ymin << "\n" << xmax << " " << ymin << " " << xmax << " " << ymax << "\n"; 
+    //std::cout << heightMap[xmin][ymin] << " " << heightMap[xmax][ymin] << "\n" << heightMap[xmax][ymin] << " " << heightMap[xmax][ymax] << "\n";
 
-    std::cout << "\nresult height : " << result_height << "\n";
+    //std::cout << "\nresult height : " << result_height << "\n";
+    return result_height;
 }
 
 float get_fract(float f){
     float d = f - (long)f;
     return d;
 }
-*/

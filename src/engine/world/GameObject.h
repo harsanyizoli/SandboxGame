@@ -10,6 +10,9 @@ typedef struct {
     float x = 0.0f;
     float y = 0.0f;
     float z = 0.0f;
+
+    float rotate_degree = 0.0f;
+    float scale = 1.0f; 
 } Position;
 
 class GameObject : public Renderable
@@ -22,9 +25,6 @@ private:
     
     std::string shaderName = "block";
     Position p;
-
-    float rotateDegree = 0.0f;
-    float scale = 0.50f;
 
 public:
     GameObject(std::string model, std::string shader, const char* name = "Unnamed");

@@ -18,6 +18,9 @@ class World
 public:
     const char* name = "Test World";
 private:
+
+    glm::vec3 global_light = glm::vec3(0.0f, 10.0f, 0.0f);
+
     Player* w_player = nullptr;
     std::vector<GameObject*> gameObjects;
     Terrain* w_terrain = nullptr;

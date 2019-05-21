@@ -18,9 +18,9 @@ namespace Renderer
 
     template<class T>
     void render_3d_forward(T& t, Player& p){
+        glEnable(GL_DEPTH_TEST);
         t.Draw(p.GetViewMatrix());
     }
-    
-    void render_terrain(Terrain& t, Player& p);
+
 } // Renderer
 #endif
