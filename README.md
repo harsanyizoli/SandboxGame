@@ -4,6 +4,8 @@
 
 Dependencies:
 * assimp
+* glfw
+* c++17
 
 #0be8f6
 #04111f
