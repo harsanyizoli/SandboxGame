@@ -14,8 +14,8 @@ public:
 private:
     struct Config
     {
-        const int scr_width = 1600;
-        const int scr_height = 900;
+        const int scr_width = 1280;
+        const int scr_height = 720;
         const char* title = "Sandbox Game Demo";
         const bool fullscr = false;
     } config;
