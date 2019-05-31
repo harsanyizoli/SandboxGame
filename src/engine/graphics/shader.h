@@ -18,8 +18,6 @@ public:
     Shader(const char* vertexPath, const char* fragmentPath, const char* geometryPath = nullptr)
     {
         // 1. retrieve the vertex/fragment source code from filePath
-        std::cout << vertexPath << std::endl;
-        std::cout << fragmentPath << std::endl;
         std::string vertexCode;
         std::string fragmentCode;
         std::string geometryCode;

@@ -25,20 +25,15 @@ private:
     unsigned int VBO, EBO;
 public:
     
-    Mesh(std::vector<Vertex> verts, std::vector<unsigned int> inds, std::vector<Texture> texs)
-        : vertices(verts), indices(inds), textures(texs) {
-            setupMesh();
-    }
-    
-    Mesh(std::vector<Vertex> verts, std::vector<unsigned int> inds)
-        : vertices(verts), indices(inds) {
-            setupMesh();
+    Mesh(std::vector<Vertex> vertices, std::vector<unsigned int> indices, std::vector<Texture> textures){
+        this->vertices = vertices;
+        this->indices = indices;
+        this->textures = textures;
+        setupMesh();
     }
     
     ~Mesh(){
-        glDeleteVertexArrays(1, &VAO);
-        glDeleteBuffers(1, &VBO);
-        glDeleteBuffers(1, &EBO);
+
     }
 
     void Draw(Shader& shader){
@@ -102,11 +97,11 @@ private:
 
         glEnableVertexAttribArray(3);
         glVertexAttribPointer(3, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, Tangent));
-        //glDisableVertexAttribArray(3);
+        glDisableVertexAttribArray(3);
 
         glEnableVertexAttribArray(4);
         glVertexAttribPointer(4, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, Bitangent));
-        //glDisableVertexAttribArray(4);
+        glDisableVertexAttribArray(4);
         
         glBindVertexArray(0);
     }

@@ -12,46 +12,66 @@
 
 class Renderable
 {
-
+protected:
+    bool isVisible = true;
 private:
 
-    Model* model;
-    Shader* shader;
+    Model* model = nullptr;
+    Shader* shader = nullptr;
 
     Transform3D trans;
 
 public:
     Renderable(){
-        INFO("Renderable constructor");
-        trans.projection = glm::perspective(glm::radians(45.0f), ASPECT_RATIO, 0.1f, 100.0f);
+        trans.projection = glm::perspective(glm::radians(45.0f), ASPECT_RATIO, 0.1f, 1500.0f);
+        trans.model = glm::mat4(1.0f);
     }
 
     ~Renderable(){
 
     }
 
-    void Draw(glm::mat4 view){
-        shader->use();
+    void Draw(glm::mat4 view, glm::vec3 pos){
+        if(isVisible) {
+            shader->use();
 
-        shader->setMat4("projection", trans.projection);
-        shader->setMat4("view", view);
-        shader->setMat4("model", trans.model);
-
-        model->Draw(*(this->shader));
+            shader->setMat4("projection", trans.projection);
+            shader->setMat4("view", view);
+            shader->setMat4("model", trans.model);
+            model->Draw(*shader);
+        }
     }
 
 protected:
 
-    void setModel(glm::vec3 pos, float scale, float rotate){
-        glm::mat4 model = glm::mat4(1.0f);
-        model = glm::translate(model, pos);
-        model = glm::scale(model, glm::vec3(scale));
-        model = glm::rotate(model, glm::radians(rotate), glm::vec3(0.0f, 1.0f, 0.0f));
-        trans.model = model;
+    void setModel(glm::vec3 pos, float scale){
+        trans.model = glm::translate(glm::mat4(1.0f), pos);
+        //trans.model = glm::scale(trans.model, glm::vec3(scale));
+    }
+
+    void rotatexModel(float deg, glm::vec3 offset){
+        trans.model = glm::translate(trans.model, -1.0f*offset);
+        glm::vec3 anglex = glm::vec3(1.0f, 0.0f, 0.0f);
+        trans.model = glm::rotate(trans.model, glm::radians(deg), anglex);
+        trans.model = glm::translate(trans.model, offset);
+    }
+    
+    void rotateyModel(float deg, glm::vec3 offset){
+        trans.model = glm::translate(trans.model, -1.0f*offset);
+        glm::vec3 angley = glm::vec3(0.0f, 1.0f, 0.0f);
+        trans.model = glm::rotate(trans.model, glm::radians(deg), angley);
+        trans.model = glm::translate(trans.model, offset);
+    }
+
+    void rotatezModel(float deg, glm::vec3 offset){
+        trans.model = glm::translate(trans.model, -1.0f*offset);
+        glm::vec3 anglez = glm::vec3(0.0f, 0.0f, 1.0f);
+        trans.model = glm::rotate(trans.model, glm::radians(deg), anglez);
+        trans.model = glm::translate(trans.model, offset);
     }
 
     void loadModel(std::string name){
-        model = new Model((char*)(get_model_path() + name + ".obj").c_str()); 
+        model = new Model(get_model_path() + name + ".obj");
     }
 
     void loadShader(std::string name){

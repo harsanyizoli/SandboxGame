@@ -20,7 +20,8 @@ private:
 
     static float** heightMap;
     float scale = 0.15f;
-    float yoffset = -10.0f;
+    float yoffset = -75.0f;
+    float waterLevel = -1.5f;
 
 public:
     Terrain();

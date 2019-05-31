@@ -6,7 +6,7 @@ float get_fract(float f);
 
 Terrain::Terrain(){
     generateTerrain(Terrain::size);
-    genMesh(size - 1, heightMap);
+    genMesh(size - 1, heightMap, waterLevel);
 }
 
 Terrain::~Terrain(){
@@ -18,7 +18,7 @@ void Terrain::generateTerrain(const unsigned int size){
 
     for(int i = 0; i < size; i++){ heightMap[i] = (float*) malloc(size*sizeof(float)); }
 
-    std::ifstream file ("testmap3.data", std::ios::in | std::ios::binary);
+    std::ifstream file ("testmap4.data", std::ios::in | std::ios::binary);
     if(!file)
         ERROR("no file");
     
@@ -40,8 +40,8 @@ float Terrain::getHeightForPos(float x, float y){
         xmin = (int)x;
         xmax = xmin;
     } else {
-        xmin = (int)floorf(x);
-        xmax = (int)ceilf(x);
+        xmax = (int)floorf(x);
+        xmin = (int)ceilf(x);
     }
 
     if(y == floorf(y)){
@@ -53,8 +53,8 @@ float Terrain::getHeightForPos(float x, float y){
         ymax = (int)ceilf(y);
     }
 
-    float resymin = ((1.0f - get_fract(y)) * heightMap[xmin][ymin]) + ( get_fract(y) * heightMap[xmin][ymax]);
-    float resymax = ((1.0f - get_fract(y)) * heightMap[xmax][ymin]) + (get_fract(y) * heightMap[xmax][ymax]);
+    float resymin = ((1.0f - get_fract(y)) * heightMap[512 - xmin][512 - ymin]) + (get_fract(y) * heightMap[512 - xmin][512 - ymax]);
+    float resymax = ((1.0f - get_fract(y)) * heightMap[512 - xmax][512 - ymin]) + (get_fract(y) * heightMap[512 - xmax][512 - ymax]);
     
     float result_height = ((get_fract(x) * resymin) + ((1.0f - get_fract(x)) * resymax));
     //std::cout << "xpos : " << x << " ypos: " << y << "\n";

@@ -19,7 +19,8 @@ namespace Renderer
     template<class T>
     void render_3d_forward(T& t, Player& p){
         glEnable(GL_DEPTH_TEST);
-        t.Draw(p.GetViewMatrix());
+        glEnable(GL_MULTISAMPLE);
+        t.Draw(p.GetViewMatrix(), p.Position);
     }
 
 } // Renderer

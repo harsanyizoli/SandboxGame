@@ -11,6 +11,7 @@ double Window::m_lasty;
 void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods);
 void cursor_position_callback(GLFWwindow* window, double xpos, double ypos);
 void mouse_button_callback(GLFWwindow* window, int button, int action, int mods);
+void error_callback(int error, const char* description);
 bool firstMouse = true;
 
 Window::Window(const char* title, int width, int height, bool isFullscreen)
@@ -49,6 +50,7 @@ void Window::init(){
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+    glfwWindowHint(GLFW_SAMPLES, 4);
     m_window = glfwCreateWindow(m_width, m_height, m_title,
                                 m_fullscrean ? glfwGetPrimaryMonitor() : NULL, 
                                 NULL);
@@ -59,6 +61,7 @@ void Window::init(){
     glfwSetKeyCallback(m_window, key_callback);
     glfwSetCursorPosCallback(m_window, cursor_position_callback);
     glfwSetMouseButtonCallback(m_window, mouse_button_callback);
+    glfwSetErrorCallback(error_callback);
     //glfwSetWindowUserPointer(m_window, this);
     glfwSetInputMode(m_window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 }
@@ -73,7 +76,7 @@ void Window::update(){
     shouldClose();
 }
 void Window::clear(){
-    glClearColor(0.1f, 0.0f, 0.5f, 1.0f);
+    glClearColor(0.1f, 0.0f, 0.2f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 }
 void Window::close(bool shouldClose = false){
@@ -110,4 +113,7 @@ void mouse_button_callback(GLFWwindow* window, int button, int action, int mods)
 }
 double Window::getCurrentTimer(){
     return glfwGetTime();
+}
+void error_callback(int error, const char* description){
+    std::cout << error << " " << description << "\n";
 }

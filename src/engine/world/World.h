@@ -25,6 +25,8 @@ private:
     std::vector<GameObject*> gameObjects;
     Terrain* w_terrain = nullptr;
 
+    float gravity = -20.0f;
+
 public:
     World();
     

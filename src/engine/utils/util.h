@@ -2,6 +2,9 @@
 #define UTIL_H
 #include "../common.h"
 #include <filesystem>
+#include <lodepng.h>
+#include <vector>
+#include <algorithm>
 
 typedef struct {
     int frames;
@@ -22,5 +25,8 @@ typedef struct {
 std::string get_texture_path();
 std::string get_model_path();
 std::string get_shader_path();
+
+unsigned int TextureFromFile(const char* file);
+unsigned int loadCubemap(std::vector<std::string> faces);
 
 #endif

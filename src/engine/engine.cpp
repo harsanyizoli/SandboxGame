@@ -9,7 +9,7 @@ Engine::Engine(){
 
 void Engine::update(float delta){
     e_world->update(delta);
-    //std::cout << e_world->name << std::endl;
+    e_ui->DrawUI();
 }
 
 Engine::~Engine(){
@@ -19,7 +19,9 @@ Engine::~Engine(){
 void Engine::init(){   
     e_window = new Window(config.title, config.scr_width, config.scr_height, config.fullscr);
     e_window->createContext();
-    e_world = new World();}
+    e_world = new World();
+    e_ui = new ui(config.scr_width, config.scr_height);    
+}
 
 
 void Engine::run(){
@@ -35,8 +37,7 @@ void Engine::run(){
         float currentFrame = getTimer();
         deltaTime = currentFrame - lastFrame;
         lastFrame = currentFrame;
-        std::cout << 1/deltaTime << std::endl;
-        //Renderer::draw_fps(deltaTime);
+        //std::cout << 1/deltaTime << std::endl;
         update(deltaTime);
         chechForClose();
 

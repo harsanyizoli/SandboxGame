@@ -10,6 +10,9 @@
 #include <lodepng.h>
 
 #include <vector>
+#include <thread>
+#include <future>
+
 class Model
 {
 private:
@@ -18,7 +21,7 @@ private:
     std::string directory;
 
 public:
-    Model(char* filename){
+    Model(std::string filename){
         loadModel(filename);
     }
     ~Model();
@@ -156,7 +159,6 @@ private:
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
         return textureid; 
-
     }
 
 };
